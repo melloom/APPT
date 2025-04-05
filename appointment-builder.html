@@ -1,0 +1,3290 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appointment Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://longhome.com/wp-content/uploads/2025/01/favicon.ico" type="image/x-icon">
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-light: #3b82f6;
+        --primary-dark: #1d4ed8;
+        --accent: #f59e0b;
+        --accent-light: #fbbf24;
+        --text-dark: #1e293b;
+        --text-light: #64748b;
+        --background: #f8fafc;
+        --card: #ffffff;
+        --warning: #ef4444;
+        --success: #10b981;
+        --border: #e2e8f0;
+        --focus: rgba(59, 130, 246, 0.5);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--background);
+        color: var(--text-dark);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+      }
+
+      .app-container {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+        color: white;
+        padding: 2rem 1.5rem;
+        position: relative;
+      }
+
+      .logo-area {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2.5rem;
+      }
+
+      .logo-icon {
+        background-color: white;
+        color: var(--primary);
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo-text {
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+
+      .sidebar-menu {
+        margin-top: 2rem;
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .menu-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .menu-item.active {
+        background-color: rgba(255, 255, 255, 0.2);
+        font-weight: 500;
+      }
+
+      .menu-item i {
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+      }
+
+      .content-area {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .page-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      .user-menu {
+        display: flex;
+        align-items: center;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--primary-light);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-right: 1rem;
+      }
+
+      .card {
+        background-color: var(--card);
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+      }
+
+      .card-title i {
+        margin-right: 0.75rem;
+        color: var(--primary);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-dark);
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.2s;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px var(--focus);
+      }
+
+      textarea.form-control {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        font-size: 0.95rem;
+        gap: 0.5rem;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary {
+        background-color: white;
+        color: var(--text-dark);
+        border: 1px solid var(--border);
+      }
+
+      .btn-secondary:hover {
+        background-color: var(--background);
+      }
+
+      .btn-success {
+        background-color: var(--success);
+        color: white;
+      }
+
+      .btn-success:hover {
+        background-color: #0ea271;
+      }
+
+      .btn-accent {
+        background-color: var(--accent);
+        color: white;
+      }
+
+      .btn-accent:hover {
+        background-color: #e89306;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .appointment-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .appointment-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        padding: 1.25rem;
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+        position: relative;
+      }
+
+      .appointment-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .appointment-status {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background-color: rgba(59, 130, 246, 0.1);
+        color: var(--primary);
+      }
+
+      .appointment-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+      }
+
+      .appointment-details {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+      }
+
+      .appointment-details div {
+        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .appointment-date {
+        color: var(--primary);
+        font-weight: 500;
+      }
+
+      .appointment-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .action-btn {
+        background-color: var(--background);
+        border: none;
+        border-radius: 6px;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: var(--text-light);
+      }
+
+      .action-btn:hover {
+        background-color: var(--primary-light);
+        color: white;
+      }
+
+      .sharelink-container {
+        position: relative;
+        margin-top: 1rem;
+      }
+
+      .sharelink-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        padding-right: 40px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.875rem;
+        background-color: #f9fafb;
+      }
+
+      .copy-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--primary);
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .login-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.75);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+      }
+
+      .login-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        width: 400px;
+        padding: 2rem;
+      }
+
+      .login-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .login-logo {
+        margin-bottom: 1rem;
+        font-size: 2rem;
+        color: var(--primary);
+      }
+
+      .login-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+      }
+
+      .login-subtitle {
+        color: var(--text-light);
+        font-size: 0.875rem;
+      }
+
+      .form-footer {
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+      }
+
+      .tab-nav {
+        display: flex;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 1.5rem;
+      }
+
+      .tab-item {
+        padding: 0.75rem 1.25rem;
+        cursor: pointer;
+        font-weight: 500;
+        border-bottom: 2px solid transparent;
+        color: var(--text-light);
+        transition: all 0.2s;
+      }
+
+      .tab-item.active {
+        border-bottom-color: var(--primary);
+        color: var(--primary);
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: var(--text-light);
+      }
+
+      .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #cbd5e1;
+      }
+
+      .empty-title {
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: white;
+        color: var(--text-dark);
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.3s;
+        z-index: 1000;
+      }
+
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .toast-success {
+        border-left: 4px solid var(--success);
+      }
+
+      .toast-success .toast-icon {
+        color: var(--success);
+      }
+
+      .toast-error {
+        border-left: 4px solid var(--warning);
+      }
+
+      .toast-error .toast-icon {
+        color: var(--warning);
+      }
+
+      .toast-message {
+        font-weight: 500;
+      }
+
+      .preview-section {
+        background-color: #f9fafb;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        border-left: 4px solid var(--primary-light);
+      }
+
+      @media (max-width: 768px) {
+        .app-container {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          display: none;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Template manager styles */
+      .template-card {
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        margin-bottom: 1rem;
+      }
+      
+      .template-card h3 {
+        margin-bottom: 1rem;
+        color: var(--text-dark);
+        font-size: 1.1rem;
+      }
+      
+      .template-editor {
+        font-family: monospace;
+        white-space: pre-wrap;
+        resize: vertical;
+      }
+      
+      .character-count {
+        text-align: right;
+        font-size: 0.8rem;
+        color: var(--text-light);
+        margin-top: 4px;
+      }
+      
+      /* Communications list styles */
+      .communications-list {
+        margin-top: 1rem;
+      }
+      
+      .communication-item {
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        margin-bottom: 10px;
+        background-color: white;
+      }
+      
+      .communication-item .header {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: none;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      
+      .communication-item .recipient {
+        font-weight: 500;
+      }
+      
+      .communication-item .date {
+        color: var(--text-light);
+        font-size: 0.9rem;
+      }
+      
+      .communication-item .content {
+        font-size: 0.9rem;
+        color: var(--text-light);
+      }
+      
+      .communication-item .status {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        margin-top: 10px;
+      }
+      
+      .status-delivered {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: var(--success);
+      }
+      
+      .status-failed {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: var(--warning);
+      }
+      
+      /* Form check styles */
+      .form-check {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      
+      .form-check-input {
+        margin-right: 8px;
+      }
+      
+      /* Bulk recipients list */
+      .bulk-recipients {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-top: 1rem;
+      }
+      
+      .recipient-item {
+        padding: 10px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+      }
+      
+      .recipient-item:last-child {
+        border-bottom: none;
+      }
+      
+      .recipient-info {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .recipient-name {
+        font-weight: 500;
+      }
+      
+      .recipient-contact {
+        font-size: 0.85rem;
+        color: var(--text-light);
+      }
+
+      /* About page styles */
+      .about-content {
+        padding: 1rem 0;
+      }
+      
+      .developer-profile {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+      
+      .developer-avatar {
+        margin-right: 1.5rem;
+      }
+      
+      .developer-info h3 {
+        margin: 0;
+        color: var(--text-dark);
+        font-size: 1.5rem;
+      }
+      
+      .developer-title {
+        color: var(--text-light);
+        font-size: 1rem;
+        margin-top: 0.25rem;
+      }
+      
+      .about-text p {
+        margin-bottom: 1rem;
+        line-height: 1.6;
+      }
+      
+      .about-text h4 {
+        margin: 1.5rem 0 0.5rem;
+        color: var(--text-dark);
+      }
+      
+      .version-info {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+        color: var(--text-light);
+        font-size: 0.9rem;
+      }
+      
+      /* Legal page styles */
+      .legal-content {
+        display: none;
+        padding: 1rem 0;
+      }
+      
+      .legal-content.active {
+        display: block;
+      }
+      
+      .legal-content h3 {
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+      }
+      
+      .legal-content > p {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+      }
+      
+      .legal-section {
+        margin-top: 1rem;
+      }
+      
+      .legal-section h4 {
+        margin: 1.5rem 0 0.5rem;
+        color: var(--text-dark);
+      }
+      
+      .legal-section p {
+        margin-bottom: 1rem;
+        line-height: 1.6;
+      }
+      
+      /* Salesforce integration styles */
+      .settings-info-box {
+        display: flex;
+        align-items: flex-start;
+        padding: 1rem;
+        background-color: rgba(59, 130, 246, 0.1);
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+      }
+      
+      .settings-info-box i {
+        font-size: 1.25rem;
+        color: var(--primary);
+        margin-right: 1rem;
+        margin-top: 0.25rem;
+      }
+      
+      .settings-info-box p {
+        margin: 0;
+        line-height: 1.5;
+      }
+      
+      .sf-integration-options {
+        border-top: 1px solid var(--border);
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .sf-integration-options h4 {
+        margin-bottom: 1rem;
+        color: var(--text-dark);
+      }
+      
+      .disabled-input {
+        background-color: #f5f5f5;
+        cursor: not-allowed;
+      }
+      
+      .badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 20px;
+        margin-left: 0.5rem;
+        vertical-align: middle;
+        font-weight: normal;
+      }
+      
+      .coming-soon {
+        background-color: #f59e0b;
+        color: white;
+      }
+
+      .mini-btn {
+        padding: 0.35rem 0.75rem;
+        font-size: 0.8rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        transition: all 0.2s;
+      }
+      
+      .mini-btn i {
+        font-size: 0.85rem;
+      }
+      
+      .sms-btn {
+        background-color: var(--success);
+        color: white;
+      }
+      
+      .sms-btn:hover {
+        background-color: #0ea271;
+      }
+      
+      .email-btn {
+        background-color: var(--accent);
+        color: white;
+      }
+      
+      .email-btn:hover {
+        background-color: #e89306;
+      }
+      
+      .temp-user-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: var(--warning);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        z-index: 1000;
+      }
+
+      .developer-footer {
+        margin-top: 1rem;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--text-light);
+      }
+
+      .developer-info-compact {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .dev-name {
+        font-weight: 500;
+      }
+
+      .dev-version {
+        font-style: italic;
+      }
+    </style>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+    <script type="text/javascript">
+      (function() {
+        emailjs.init("YOUR_PUBLIC_KEY");
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="login-logo">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <h2 class="login-title">Appointment Builder</h2>
+          <p class="login-subtitle">Sign in to access your dashboard</p>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" id="hostName" class="form-control" placeholder="Enter your username" />
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Security Key</label>
+          <input type="password" id="hostPassword" class="form-control" placeholder="Enter your security key" />
+        </div>
+        
+        <div class="form-footer">
+          <div class="remember-me">
+            <input type="checkbox" id="rememberMe" checked />
+            <label for="rememberMe">Remember me</label>
+          </div>
+          <button id="loginBtn" class="btn btn-primary">Sign In</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="app-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="logo-area">
+          <div class="logo-icon">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="logo-text">Appointment Builder</div>
+        </div>
+        
+        <div class="user-info">
+          <div class="user-greeting">Welcome back,</div>
+          <div class="user-name" id="sidebarUserName">MP</div>
+        </div>
+        
+        <div class="sidebar-menu">
+          <div class="menu-item active" data-tab="dashboard">
+            <i class="fas fa-th-large"></i>
+            <span>Dashboard</span>
+          </div>
+          <div class="menu-item" data-tab="appointments">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Appointments</span>
+          </div>
+          <div class="menu-item" data-tab="communications">
+            <i class="fas fa-comments"></i>
+            <span>Communications</span>
+          </div>
+          <div class="menu-item" data-tab="settings">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </div>
+          <div class="menu-item" data-tab="about">
+            <i class="fas fa-user"></i>
+            <span>About</span>
+          </div>
+          <div class="menu-item" data-tab="legal">
+            <i class="fas fa-gavel"></i>
+            <span>Legal</span>
+          </div>
+        </div>
+        
+        <button id="logoutBtn" class="btn btn-secondary" style="margin-top: auto; width: 100%;">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
+        
+        <!-- Developer Info Footer -->
+        <div class="developer-footer">
+          <div class="developer-info-compact">
+            <span class="dev-name">Developed by Melvin Peralta</span>
+            <span class="dev-version">v1.3.0 | 2025</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Main Content -->
+      <div class="content-area">
+        <div class="header">
+          <h1 class="page-title">Appointment Dashboard</h1>
+          <div class="user-menu">
+            <div class="user-avatar" id="userInitials">MP</div>
+            <div class="user-name" id="headerUserName">MP</div>
+          </div>
+        </div>
+        
+        <!-- Dashboard Tab -->
+        <div id="dashboardTab" class="tab-content active">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-plus-circle"></i> Create New Appointment</h2>
+            </div>
+            
+            <form id="appointmentForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Customer Name</label>
+                  <input type="text" id="customerName" class="form-control" placeholder="Enter customer name" />
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Address</label>
+                  <input type="text" id="address" class="form-control" placeholder="Start typing to search address..." />
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Date</label>
+                  <input type="date" id="appointmentDate" class="form-control" />
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Time</label>
+                  <select id="appointmentTime" class="form-control">
+                    <option value="">Select a date first</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Project Type</label>
+                  <select id="projectType" class="form-control">
+                    <option value="">Select project type</option>
+                    <option value="Roofing">Roofing</option>
+                    <option value="Bathroom Remodel">Bathroom Remodel</option>
+                    <option value="Kitchen Remodel">Kitchen Remodel</option>
+                    <option value="Siding">Siding</option>
+                    <option value="Windows">Windows</option>
+                    <option value="General Consultation">General Consultation</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Email (Optional)</label>
+                  <input type="email" id="email" class="form-control" placeholder="Customer email address" />
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Phone Number (Optional)</label>
+                  <input type="tel" id="phone" class="form-control" placeholder="Customer phone number" />
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Communication Preference</label>
+                  <select id="communicationPref" class="form-control">
+                    <option value="email">Email</option>
+                    <option value="sms">Text/SMS</option>
+                    <option value="both">Both Email & SMS</option>
+                    <option value="none">None</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Notes</label>
+                <textarea id="notes" class="form-control" placeholder="Add any additional notes or instructions"></textarea>
+              </div>
+              
+              <div class="btn-group">
+                <button type="button" id="previewBtn" class="btn btn-secondary">
+                  <i class="fas fa-eye"></i> Preview
+                </button>
+                <button type="button" id="generateLinkBtn" class="btn btn-primary">
+                  <i class="fas fa-link"></i> Generate Link
+                </button>
+                <button type="button" id="sendEmailBtn" class="btn btn-accent">
+                  <i class="fas fa-envelope"></i> Send Email
+                </button>
+                <button type="button" id="sendSMSBtn" class="btn btn-success">
+                  <i class="fas fa-sms"></i> Send SMS
+                </button>
+              </div>
+            </form>
+            
+            <div id="previewSection" class="preview-section" style="display: none;"></div>
+            
+            <div id="shareLinkContainer" class="sharelink-container" style="display: none;">
+              <input type="text" id="shareLink" class="sharelink-input" readonly />
+              <button id="copyLinkBtn" class="copy-btn"><i class="fas fa-copy"></i></button>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-calendar"></i> Recent Appointments</h2>
+              <button id="viewAllBtn" class="btn btn-secondary btn-sm">View All</button>
+            </div>
+            
+            <div id="recentAppointmentsList" class="appointment-list">
+              <!-- Appointments will be rendered here -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- Appointments Tab -->
+        <div id="appointmentsTab" class="tab-content">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-calendar-alt"></i> All Appointments</h2>
+              <button id="createNewAppointmentBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i> New Appointment
+              </button>
+            </div>
+            
+            <div class="tab-nav">
+              <div class="tab-item active" data-view="all">All Appointments</div>
+              <div class="tab-item" data-view="upcoming">Upcoming</div>
+              <div class="tab-item" data-view="past">Past</div>
+            </div>
+            
+            <div id="allAppointmentsList" class="appointment-list">
+              <!-- All appointments will be rendered here -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- Communications Tab -->
+        <div id="communicationsTab" class="tab-content">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-envelope"></i> Email Communications</h2>
+            </div>
+            
+            <div class="tab-nav">
+              <div class="tab-item active" data-email-view="templates">Email Templates</div>
+              <div class="tab-item" data-email-view="sent">Sent Emails</div>
+              <div class="tab-item" data-email-view="bulk">Send Bulk Email</div>
+            </div>
+            
+            <div id="emailTemplatesView" class="tab-content-view active">
+              <div class="template-card">
+                <h3>Appointment Confirmation</h3>
+                <div class="template-content">
+                  <textarea id="emailConfirmationTemplate" class="form-control template-editor" style="min-height: 300px;">
+Dear {{customerName}},
+
+Thank you for scheduling an appointment with Long Home. We're looking forward to meeting with you to discuss your {{projectType}} project.
+
+YOUR APPOINTMENT DETAILS:
+Date: {{appointmentDate}}
+Time: {{appointmentTime}}
+Location: {{address}}
+
+WHAT TO EXPECT DURING YOUR CONSULTATION (60-90 minutes):
+✅ Review of your goals and design ideas
+✅ Samples and material options
+✅ On-site measurements
+✅ Custom estimate (valid for a full year)
+✅ Warranties + financing options
+
+During your appointment, our specialist will conduct a thorough inspection, discuss options, and provide a detailed estimate with our 1-year price lock guarantee.
+
+If you need to reschedule, please call us at (555) 123-4567 at least 24 hours before your appointment.
+
+You can also view your appointment details and add it to your calendar by clicking the link below:
+{{confirmationLink}}
+
+Best regards,
+The Long Home Team
+(555) 123-4567
+appointments@longhome.com
+                  </textarea>
+                </div>
+                <div class="form-footer" style="text-align: right; margin-top: 1rem;">
+                  <button class="btn btn-secondary preview-template" data-template="confirmation">Preview</button>
+                  <button class="btn btn-primary save-template" data-template="confirmation">Save Template</button>
+                </div>
+              </div>
+              
+              <div class="template-card" style="margin-top: 1.5rem;">
+                <h3>Bathroom Project Template</h3>
+                <div class="template-content">
+                  <textarea id="bathroomTemplate" class="form-control template-editor" style="min-height: 300px;">
+Dear {{customerName}},
+
+Thank you for your interest in a bathroom remodel with Long Home Products. We're excited to help transform your bathroom!
+
+🔹 WHAT TO EXPECT DURING YOUR CONSULTATION
+
+Our specialist will:
+✅ Review your bathroom goals and design ideas
+✅ Discuss material and fixture options (with samples)
+✅ Take detailed measurements of your bathroom
+✅ Provide a custom estimate (valid for 1 year)
+✅ Explain our warranties and financing options
+
+Your appointment will take approximately 60-90 minutes, and there's absolutely no obligation to make a decision on the spot.
+
+🛁 ABOUT YOUR BATHROOM PROJECT
+We specialize in premium, full-service bathroom renovations:
+• Complete wet area upgrades (tub/shower replacements)
+• Full bathroom remodels
+• Walk-in showers, soaking tubs, and accessibility solutions
+• High-quality materials with superior warranties
+
+APPOINTMENT DETAILS:
+Date: {{appointmentDate}}
+Time: {{appointmentTime}}
+Address: {{address}}
+
+If you need to reschedule, please call us at (555) 123-4567 at least 24 hours before your appointment.
+
+We look forward to meeting you and helping create the bathroom of your dreams!
+
+Best regards,
+The Long Home Team
+(555) 123-4567
+appointments@longhome.com
+                  </textarea>
+                </div>
+                <div class="form-footer" style="text-align: right; margin-top: 1rem;">
+                  <button class="btn btn-secondary preview-template" data-template="bathroom">Preview</button>
+                  <button class="btn btn-primary save-template" data-template="bathroom">Save Template</button>
+                </div>
+              </div>
+              
+              <div class="template-card" style="margin-top: 1.5rem;">
+                <h3>Roofing Project Template</h3>
+                <div class="template-content">
+                  <textarea id="roofingTemplate" class="form-control template-editor" style="min-height: 300px;">
+Dear {{customerName}},
+
+Thank you for your interest in a roof replacement with Long Home Products. We're excited to help protect and enhance your home!
+
+🔹 WHAT TO EXPECT DURING YOUR CONSULTATION
+
+Our roofing specialist will:
+✅ Conduct a thorough roof inspection
+✅ Discuss material options and colors
+✅ Explain our installation process
+✅ Provide a detailed estimate (valid for 1 year)
+✅ Review warranties and financing options
+
+Your appointment will take approximately 60-90 minutes, and there's absolutely no obligation to make a decision on the spot.
+
+🏠 ABOUT YOUR ROOFING PROJECT
+We specialize in premium, full-service roof replacements:
+• Complete roof replacements (no patch jobs)
+• High-quality architectural shingles
+• Enhanced underlayment systems
+• Professional installation by certified specialists
+• Industry-leading warranties
+
+APPOINTMENT DETAILS:
+Date: {{appointmentDate}}
+Time: {{appointmentTime}}
+Address: {{address}}
+
+If you need to reschedule, please call us at (555) 123-4567 at least 24 hours before your appointment.
+
+We look forward to meeting you and helping secure your home with a beautiful, durable new roof!
+
+Best regards,
+The Long Home Team
+(555) 123-4567
+appointments@longhome.com
+                  </textarea>
+                </div>
+                <div class="form-footer" style="text-align: right; margin-top: 1rem;">
+                  <button class="btn btn-secondary preview-template" data-template="roofing">Preview</button>
+                  <button class="btn btn-primary save-template" data-template="roofing">Save Template</button>
+                </div>
+              </div>
+            </div>
+            
+            <div id="emailSentView" class="tab-content-view" style="display: none;">
+              <div class="empty-state">
+                <div class="empty-icon"><i class="far fa-envelope"></i></div>
+                <h3 class="empty-title">No emails sent yet</h3>
+                <p>Sent emails will appear here for tracking</p>
+              </div>
+              <div id="sentEmailsList" class="communications-list">
+                <!-- Sent emails will be displayed here -->
+              </div>
+            </div>
+            
+            <div id="emailBulkView" class="tab-content-view" style="display: none;">
+              <div class="form-group">
+                <label class="form-label">Email Template</label>
+                <select id="bulkEmailTemplate" class="form-control">
+                  <option value="confirmation">Appointment Confirmation</option>
+                  <option value="reminder">Appointment Reminder</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Recipients</label>
+                <div class="recipient-options">
+                  <div class="form-check">
+                    <input type="checkbox" id="allUpcomingCheck" class="form-check-input" checked>
+                    <label for="allUpcomingCheck" class="form-check-label">All Upcoming Appointments</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="checkbox" id="todayCheck" class="form-check-input">
+                    <label for="todayCheck" class="form-check-label">Today's Appointments</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="checkbox" id="tomorrowCheck" class="form-check-input">
+                    <label for="tomorrowCheck" class="form-check-label">Tomorrow's Appointments</label>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="recipientsList" class="bulk-recipients">
+                <!-- Recipients will be listed here -->
+                <div class="empty-state" style="padding: 1rem;">
+                  <p>No recipients found matching the selected criteria</p>
+                </div>
+              </div>
+              
+              <div class="form-footer" style="margin-top: 1.5rem;">
+                <button id="sendBulkEmailBtn" class="btn btn-primary">
+                  <i class="fas fa-paper-plane"></i> Send Bulk Emails
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-sms"></i> SMS Communications</h2>
+            </div>
+            
+            <div class="tab-nav">
+              <div class="tab-item active" data-sms-view="templates">SMS Templates</div>
+              <div class="tab-item" data-sms-view="sent">Sent SMS</div>
+              <div class="tab-item" data-sms-view="bulk">Send Bulk SMS</div>
+            </div>
+            
+            <div id="smsTemplatesView" class="tab-content-view active">
+              <div class="template-card">
+                <h3>Appointment Confirmation</h3>
+                <div class="template-content">
+                  <textarea id="smsConfirmationTemplate" class="form-control template-editor" style="min-height: 150px;">
+Hi {{customerName}}, your appointment with Long Home is confirmed for {{appointmentDate}} at {{appointmentTime}}. We'll discuss your {{projectType}} project and provide a detailed estimate valid for 1 year. Call (555) 123-4567 if you need to reschedule. View details: {{confirmationLink}}
+                  </textarea>
+                  <div class="character-count">
+                    <span id="smsConfirmationCharCount">0</span>/160 characters
+                  </div>
+                </div>
+                <div class="form-footer" style="text-align: right; margin-top: 1rem;">
+                  <button class="btn btn-secondary preview-template" data-template="smsConfirmation">Preview</button>
+                  <button class="btn btn-primary save-template" data-template="smsConfirmation">Save Template</button>
+                </div>
+              </div>
+              
+              <div class="template-card" style="margin-top: 1.5rem;">
+                <h3>Appointment Script - First Contact</h3>
+                <div class="template-content">
+                  <textarea id="smsScriptTemplate" class="form-control template-editor" style="min-height: 300px;">
+🔹 STEP 1: Kick-Off & Project Confirmation
+Hi, this is [Your Name] with Long Home Products — hope your day's going well! 👋
+Just following up on your request for a free estimate regarding your [bathroom/roofing] project.
+
+🏡 Before we lock in your consultation, can I quickly confirm:
+The full property address where the work will take place?
+
+And the best phone number to reach you?
+
+🔹 STEP 2: Ownership & Residency Check
+Thanks! Just to confirm — do you own and live in the home at that address?
+
+⚠️ We only run appointments for homeowners living in the property. Renters would need their landlord or property manager present.
+
+🔹 STEP 3: Quick Project Fit – Let's Dial It In
+We specialize in premium, full-service replacements — no patchwork or temporary fixes.
+Let me just grab a few quick details so we can tailor things perfectly for you:
+                  </textarea>
+                  <div class="character-count">
+                    <span id="smsScriptCharCount">0</span> characters
+                  </div>
+                </div>
+                <div class="form-footer" style="text-align: right; margin-top: 1rem;">
+                  <button class="btn btn-secondary preview-template" data-template="smsScript">Preview</button>
+                  <button class="btn btn-primary save-template" data-template="smsScript">Save Template</button>
+                </div>
+              </div>
+              
+              <div class="template-card" style="margin-top: 1.5rem;">
+                <h3>Bathroom Project Script</h3>
+                <div class="template-content">
+                  <textarea id="bathroomScriptTemplate" class="form-control template-editor" style="min-height: 300px;">
+🛁 BATHROOM PROJECT QUESTIONS:
+Are you looking to upgrade the wet area only (tub/shower), or do a full remodel?
+
+Have you already purchased any materials, or are you looking for a full solution?
+
+What's your vision — walk-in shower, soaking tub, or jetted tub?
+
+Is the plumbing already in place for the layout you want?
+
+Is the home a mobile/manufactured home?
+
+If so, is it stationary and owner-occupied?
+
+🛑 We only work on stationary, owner-occupied mobile homes, and wet area upgrades only.
+
+🔹 STEP 4: What to Expect from the Consultation
+Perfect. Your appointment will take about 60–90 minutes, and includes:
+
+✅ Review of your goals and design ideas
+✅ Samples and material options
+✅ On-site measurements
+✅ Custom estimate (valid for a full year)
+✅ Warranties + financing options
+
+Sound like what you're looking for?
+                  </textarea>
+                  <div class="character-count">
+                    <span id="bathroomScriptCharCount">0</span> characters
+                  </div>
+                </div>
+                <div class="form-footer" style="text-align: right; margin-top: 1rem;">
+                  <button class="btn btn-secondary preview-template" data-template="bathroomScript">Preview</button>
+                  <button class="btn btn-primary save-template" data-template="bathroomScript">Save Template</button>
+                </div>
+              </div>
+              
+              <div class="template-card" style="margin-top: 1.5rem;">
+                <h3>Roofing Project Script</h3>
+                <div class="template-content">
+                  <textarea id="roofingScriptTemplate" class="form-control template-editor" style="min-height: 300px;">
+🏠 ROOFING PROJECT QUESTIONS:
+This is a full roof replacement, correct?
+
+What kind of roof is currently on the home?
+
+Any specific material you're interested in — architectural shingles, metal, slate/cedar look?
+
+Is the home a mobile or manufactured home, and if so, is it stationary?
+
+🛑 We only install shingle roofs on stationary mobile homes — no metal roofs on trailers.
+
+🔹 STEP 4: What to Expect from the Consultation
+Perfect. Your appointment will take about 60–90 minutes, and includes:
+
+✅ Full roof inspection
+✅ Material samples and options
+✅ Detailed measurements
+✅ Custom estimate (valid for a full year)
+✅ Warranties + financing options
+
+Sound like what you're looking for?
+                  </textarea>
+                  <div class="character-count">
+                    <span id="roofingScriptCharCount">0</span> characters
+                  </div>
+                </div>
+                <div class="form-footer" style="text-align: right; margin-top: 1rem;">
+                  <button class="btn btn-secondary preview-template" data-template="roofingScript">Preview</button>
+                  <button class="btn btn-primary save-template" data-template="roofingScript">Save Template</button>
+                </div>
+              </div>
+              
+              <div class="template-card" style="margin-top: 1.5rem;">
+                <h3>Scheduling Script Final Steps</h3>
+                <div class="template-content">
+                  <textarea id="schedulingScriptTemplate" class="form-control template-editor" style="min-height: 300px;">
+🔹 STEP 5: Decision-Maker Confirmation
+Before we schedule —
+Do you share home improvement decisions with a spouse or co-owner? Or do you handle everything solo?
+
+🔸 If SHARED:
+Totally understand — we just ask that both decision-makers be present for the consultation so we can cover everything in one go and avoid delays.
+
+Will your spouse/partner be available to join you for the appointment?
+
+🔐 If not, we'll need to pick a time when both of you can join. That way we keep things efficient and respectful of your time.
+
+🔸 If SOLO (Confirmed):
+Perfect — thanks for confirming.
+We'll walk through design, pricing, and next steps — no pressure, just info to help you make the right call.
+
+🔹 STEP 6: Final Details & Scheduling
+Awesome — let's get you scheduled!
+
+Our consultations are 100% free, and the estimate is good for an entire year, so you can plan at your pace.
+
+📆 What day and time works best for your consultation?
+(Make sure both decision-makers are available, if applicable.)
+
+✅ Finisher (Both Homeowners Present):
+Great — you're all set for [DAY] at [TIME].
+Thanks again for your time — our specialist will walk you through everything from design to pricing. Looking forward to it!
+
+✅ Finisher (Solo Decision-Maker Confirmed):
+Perfect — you're locked in for [DAY] at [TIME].
+We'll cover everything you need to make a confident decision when the time's right. Appreciate your time!
+                  </textarea>
+                  <div class="character-count">
+                    <span id="schedulingScriptCharCount">0</span> characters
+                  </div>
+                </div>
+                <div class="form-footer" style="text-align: right; margin-top: 1rem;">
+                  <button class="btn btn-secondary preview-template" data-template="schedulingScript">Preview</button>
+                  <button class="btn btn-primary save-template" data-template="schedulingScript">Save Template</button>
+                </div>
+              </div>
+            </div>
+            
+            <div id="smsSentView" class="tab-content-view" style="display: none;">
+              <div class="empty-state">
+                <div class="empty-icon"><i class="far fa-comment-dots"></i></div>
+                <h3 class="empty-title">No SMS messages sent yet</h3>
+                <p>Sent SMS messages will appear here for tracking</p>
+              </div>
+              <div id="sentSMSList" class="communications-list">
+                <!-- Sent SMS will be displayed here -->
+              </div>
+            </div>
+            
+            <div id="smsBulkView" class="tab-content-view" style="display: none;">
+              <div class="form-group">
+                <label class="form-label">SMS Template</label>
+                <select id="bulkSmsTemplate" class="form-control">
+                  <option value="smsConfirmation">Appointment Confirmation</option>
+                  <option value="smsReminder">Appointment Reminder</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Recipients</label>
+                <div class="recipient-options">
+                  <div class="form-check">
+                    <input type="checkbox" id="smsAllUpcomingCheck" class="form-check-input" checked>
+                    <label for="smsAllUpcomingCheck" class="form-check-label">All Upcoming Appointments</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="checkbox" id="smsTodayCheck" class="form-check-input">
+                    <label for="smsTodayCheck" class="form-check-label">Today's Appointments</label>
+                  </div>
+                  <div class="form-check">
+                    <input type="checkbox" id="smsTomorrowCheck" class="form-check-input">
+                    <label for="smsTomorrowCheck" class="form-check-label">Tomorrow's Appointments</label>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="smsRecipientsList" class="bulk-recipients">
+                <!-- SMS Recipients will be listed here -->
+                <div class="empty-state" style="padding: 1rem;">
+                  <p>No recipients found matching the selected criteria</p>
+                </div>
+              </div>
+              
+              <div class="form-footer" style="margin-top: 1.5rem;">
+                <button id="sendBulkSmsBtn" class="btn btn-primary">
+                  <i class="fas fa-paper-plane"></i> Send Bulk SMS
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Settings Tab -->
+        <div id="settingsTab" class="tab-content">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-cog"></i> Account Settings</h2>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Company Name</label>
+              <input type="text" id="companyName" class="form-control" value="Long Home" />
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Company Logo URL</label>
+              <input type="text" id="logoUrl" class="form-control" placeholder="Enter logo URL" />
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Appointment Duration (minutes)</label>
+              <input type="number" id="duration" class="form-control" value="90" />
+            </div>
+            
+            <button id="saveSettingsBtn" class="btn btn-primary">
+              <i class="fas fa-save"></i> Save Settings
+            </button>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-tools"></i> Tools</h2>
+            </div>
+            
+            <div class="btn-group">
+              <button id="exportAllBtn" class="btn btn-secondary">
+                <i class="fas fa-file-export"></i> Export Data
+              </button>
+              <button id="clearAllBtn" class="btn btn-secondary">
+                <i class="fas fa-trash"></i> Clear All Data
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-comments"></i> Communication Settings</h2>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Company Email</label>
+                <input type="email" id="companyEmail" class="form-control" placeholder="appointments@your-business.com" value="appointments@longhome.com" />
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Company Phone</label>
+                <input type="tel" id="companyPhone" class="form-control" placeholder="(555) 123-4567" value="(555) 123-4567" />
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Email Service</label>
+                <select id="emailServiceProvider" class="form-control">
+                  <option value="emailjs">EmailJS</option>
+                  <option value="sendgrid">SendGrid</option>
+                  <option value="custom">Custom SMTP</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">EmailJS Service ID</label>
+                <input type="text" id="emailjsServiceId" class="form-control" placeholder="service_xxxx" />
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">SMS Service</label>
+                <select id="smsServiceProvider" class="form-control">
+                  <option value="twilio">Twilio</option>
+                  <option value="custom">Custom API</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">SMS Account SID</label>
+                <input type="text" id="twilioAccountSid" class="form-control" placeholder="ACxxxxxxxx" />
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-checkbox">
+                <input type="checkbox" id="sendAutomaticReminders">
+                <span>Send automatic reminders 24 hours before appointments</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-cloud"></i> Salesforce Integration <span class="badge coming-soon">Coming Soon</span></h2>
+            </div>
+            
+            <div class="settings-info-box">
+              <i class="fas fa-info-circle"></i>
+              <p>Salesforce integration is planned for a future update. Below are settings that will be activated when this feature is released.</p>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Salesforce Instance URL</label>
+                <input type="text" id="salesforceUrl" class="form-control disabled-input" placeholder="https://yourinstance.my.salesforce.com" disabled />
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">API Version</label>
+                <select id="salesforceApiVersion" class="form-control disabled-input" disabled>
+                  <option value="v57.0">v57.0 (Latest)</option>
+                  <option value="v56.0">v56.0</option>
+                  <option value="v55.0">v55.0</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Authentication Method</label>
+                <select id="salesforceAuthMethod" class="form-control disabled-input" disabled>
+                  <option value="oauth">OAuth 2.0</option>
+                  <option value="jwt">JWT Bearer Flow</option>
+                  <option value="password">Username-Password Flow</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Connected App ID</label>
+                <input type="text" id="salesforceClientId" class="form-control disabled-input" placeholder="Client ID/Consumer Key" disabled />
+              </div>
+            </div>
+            
+            <div class="sf-integration-options">
+              <h4>Integration Options</h4>
+              <div class="form-check">
+                <input type="checkbox" id="sfCreateLeads" class="form-check-input" disabled />
+                <label for="sfCreateLeads" class="form-check-label">Create Leads from Appointments</label>
+              </div>
+              <div class="form-check">
+                <input type="checkbox" id="sfSyncEvents" class="form-check-input" disabled />
+                <label for="sfSyncEvents" class="form-check-label">Sync Appointments as Calendar Events</label>
+              </div>
+              <div class="form-check">
+                <input type="checkbox" id="sfBidirectionalSync" class="form-check-input" disabled />
+                <label for="sfBidirectionalSync" class="form-check-label">Enable Bidirectional Sync</label>
+              </div>
+              <div class="form-check">
+                <input type="checkbox" id="sfLogCommunications" class="form-check-input" disabled />
+                <label for="sfLogCommunications" class="form-check-label">Log Emails and SMS as Activities</label>
+              </div>
+            </div>
+            
+            <button id="saveIntegrationBtn" class="btn btn-primary" disabled>
+              <i class="fas fa-save"></i> Save Integration Settings
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-user-clock"></i> Temporary Access</h2>
+            </div>
+            
+            <div class="settings-info-box">
+              <i class="fas fa-info-circle"></i>
+              <p>Create temporary access links for managers or team members. These links expire automatically and any changes made during the temporary session won't be saved.</p>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Temporary User Name</label>
+                <input type="text" id="tempUserName" class="form-control" placeholder="Enter a name for the temporary user" />
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Access Duration</label>
+                <select id="tempUserDuration" class="form-control">
+                  <option value="4">4 hours</option>
+                  <option value="8">8 hours</option>
+                  <option value="24" selected>24 hours</option>
+                  <option value="48">48 hours</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Access Level</label>
+              <select id="tempUserAccess" class="form-control">
+                <option value="readonly">Read Only (View appointments only)</option>
+                <option value="full">Full Access (Cannot save changes)</option>
+              </select>
+            </div>
+            
+            <div id="tempLinkContainer" class="sharelink-container" style="display: none; margin-bottom: 1rem;">
+              <input type="text" id="tempShareLink" class="sharelink-input" readonly />
+              <button id="copyTempLinkBtn" class="copy-btn"><i class="fas fa-copy"></i></button>
+            </div>
+            
+            <button id="generateTempLinkBtn" class="btn btn-primary">
+              <i class="fas fa-link"></i> Generate Temporary Access Link
+            </button>
+            
+            <div id="activeTempUsers" style="margin-top: 1.5rem; display: none;">
+              <h4 style="margin-bottom: 0.75rem;">Active Temporary Users</h4>
+              <div id="tempUsersList" class="temp-users-list">
+                <!-- Active temp users will be listed here -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- About Tab -->
+        <div id="aboutTab" class="tab-content">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-user"></i> About The Developer</h2>
+            </div>
+            
+            <div class="about-content">
+              <div class="developer-profile">
+                <div class="developer-avatar">
+                  <i class="fas fa-user-circle" style="font-size: 80px; color: var(--primary-light);"></i>
+                </div>
+                <div class="developer-info">
+                  <h3>Melvin Peralta</h3>
+                  <p class="developer-title">Software Developer @ Long Home</p>
+                </div>
+              </div>
+              
+              <div class="about-text">
+                <p>Hi there! I'm Melvin, a passionate developer at Long Home who created this appointment scheduling tool to streamline our customer engagement process.</p>
+                
+                <p>With years of experience in both construction and software development, I identified that our team needed a simple yet powerful way to manage appointments with homeowners and provide them with a professional experience from the first interaction.</p>
+                
+                <p>This tool was built with a focus on ease of use, reliability, and customer experience. It allows our team to create, manage, and communicate appointments efficiently while giving our customers a seamless confirmation process.</p>
+                
+                <h4>Technical Details</h4>
+                <p>This application was built using pure HTML, CSS, and JavaScript with a focus on performance and compatibility. It uses local storage for data management and includes integration options for email and SMS services.</p>
+                
+                <h4>Future Development</h4>
+                <p>I'm continuously working to improve this tool with new features like Salesforce integration, advanced analytics, and expanded communication options.</p>
+                
+                <p>If you have any questions or feedback, feel free to reach out to me at <a href="mailto:melvin.peralta@longhome.com">melvin.peralta@longhome.com</a>.</p>
+              </div>
+              
+              <div class="version-info">
+                <p>Version: 1.3.0</p>
+                <p>Last Updated: 2025</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Legal Tab -->
+        <div id="legalTab" class="tab-content">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fas fa-gavel"></i> Legal Information</h2>
+            </div>
+            
+            <div class="tab-nav">
+              <div class="tab-item active" data-legal-view="terms">Terms of Service</div>
+              <div class="tab-item" data-legal-view="privacy">Privacy Policy</div>
+              <div class="tab-item" data-legal-view="disclaimer">Disclaimer</div>
+            </div>
+            
+            <div id="termsView" class="legal-content active">
+              <h3>Terms of Service</h3>
+              <p>Last updated: May 2023</p>
+              
+              <div class="legal-section">
+                <h4>1. Acceptance of Terms</h4>
+                <p>By accessing and using the Appointment Builder application ("the Service") provided by Long Home, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.</p>
+                
+                <h4>2. Description of Service</h4>
+                <p>The Service is a web-based appointment scheduling tool that allows Long Home representatives to create, manage, and communicate appointment details with clients.</p>
+                
+                <h4>3. User Accounts</h4>
+                <p>Access to the Service is restricted to authorized Long Home employees. You are responsible for maintaining the confidentiality of your login credentials and for all activities that occur under your account.</p>
+                
+                <h4>4. Client Data and Privacy</h4>
+                <p>All client data collected through this Service is subject to our Privacy Policy. As a user of the Service, you agree to handle client information in accordance with applicable data protection laws and our company policies.</p>
+                
+                <h4>5. Communications</h4>
+                <p>By using this Service to communicate with clients, you agree to adhere to all applicable laws regarding electronic communications, including SMS messaging and email communications.</p>
+                
+                <h4>6. Modifications to the Service</h4>
+                <p>Long Home reserves the right to modify or discontinue the Service with or without notice. We shall not be liable to you or any third party for any modification, suspension, or discontinuation of the Service.</p>
+                
+                <h4>7. Limitation of Liability</h4>
+                <p>The Service is provided on an "as is" and "as available" basis. Long Home makes no warranties, expressed or implied, and hereby disclaims all warranties, including without limitation implied warranties of merchantability and fitness for a particular purpose.</p>
+              </div>
+            </div>
+            
+            <div id="privacyView" class="legal-content">
+              <h3>Privacy Policy</h3>
+              <p>Last updated: May 2023</p>
+              
+              <div class="legal-section">
+                <h4>1. Information Collection</h4>
+                <p>We collect the following information from clients through the Appointment Builder: name, address, email address, phone number, and details about the project of interest.</p>
+                
+                <h4>2. Use of Information</h4>
+                <p>The information collected is used solely for the purpose of scheduling and confirming appointments, communicating with clients about their scheduled appointments, and providing appropriate service.</p>
+                
+                <h4>3. Data Storage</h4>
+                <p>Client data is stored locally on the device where the application is used. When integrated with third-party services like email providers or SMS gateways, data may be transmitted to these services for processing.</p>
+                
+                <h4>4. Data Security</h4>
+                <p>We implement appropriate security measures to protect against unauthorized access to or unauthorized alteration, disclosure, or destruction of data.</p>
+                
+                <h4>5. Third-Party Services</h4>
+                <p>The Service may integrate with third-party services for email and SMS communication. These services have their own privacy policies, and we encourage you to read those policies.</p>
+                
+                <h4>6. Client Rights</h4>
+                <p>Clients have the right to access, correct, or delete their personal information. Requests can be submitted to privacy@longhome.com.</p>
+              </div>
+            </div>
+            
+            <div id="disclaimerView" class="legal-content">
+              <h3>Disclaimer</h3>
+              <p>Last updated: May 2023</p>
+              
+              <div class="legal-section">
+                <h4>General Disclaimer</h4>
+                <p>The Appointment Builder is provided for internal use by Long Home employees. While we strive to keep the information accurate and up-to-date, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability of the Service.</p>
+                
+                <h4>Technology Limitations</h4>
+                <p>The Service relies on local storage technology which has inherent limitations. We recommend regularly exporting and backing up appointment data to prevent loss.</p>
+                
+                <h4>Communication Disclaimer</h4>
+                <p>SMS and email communications sent through the Service are subject to delivery limitations imposed by telecommunications carriers and email service providers. Long Home cannot guarantee delivery of all communications.</p>
+                
+                <h4>Use Limitation</h4>
+                <p>The Service is designed for use by authorized Long Home employees only. Any unauthorized use is strictly prohibited.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <div class="toast-icon"><i class="fas fa-check-circle"></i></div>
+      <div class="toast-message">Link copied to clipboard!</div>
+    </div>
+
+    <!-- Email Preview Modal -->
+    <div id="emailPreviewModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1001; backdrop-filter: blur(4px);">
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 600px; background: white; border-radius: 12px; padding: 2rem; max-height: 80vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2 style="font-size: 1.5rem; color: var(--text-dark);">Email Preview</h2>
+          <button id="closeEmailPreview" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light);">×</button>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <p><strong>From:</strong> Long Home &lt;appointments@longhome.com&gt;</p>
+          <p><strong>To:</strong> <span id="emailPreviewTo"></span></p>
+          <p><strong>Subject:</strong> Your Appointment with Long Home</p>
+        </div>
+        <div id="emailPreviewContent" style="border: 1px solid #ddd; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: #f9f9f9;">
+          <!-- Email content will be inserted here -->
+        </div>
+        <div style="text-align: right;">
+          <button id="confirmSendEmail" class="btn btn-primary">Send Email</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SMS Preview Modal -->
+    <div id="smsPreviewModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1001; backdrop-filter: blur(4px);">
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; background: white; border-radius: 12px; padding: 2rem; max-height: 80vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2 style="font-size: 1.5rem; color: var(--text-dark);">SMS Preview</h2>
+          <button id="closeSmsPreview" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light);">×</button>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <p><strong>From:</strong> Long Home (<span id="companyPhoneDisplay">(555) 123-4567</span>)</p>
+          <p><strong>To:</strong> <span id="smsPreviewTo"></span></p>
+          <p><strong>Character Count:</strong> <span id="smsCharCount">0</span>/160 <span id="smsSegments">(1 segment)</span></p>
+        </div>
+        <div id="smsPreviewContent" style="border: 1px solid #ddd; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: #f9f9f9; font-family: 'Courier New', monospace;">
+          <!-- SMS content will be inserted here -->
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+          <div class="sms-send-status" style="color: var(--text-light); font-size: 0.9rem;">
+            <span id="smsDeliveryInfo">SMS will be sent via Twilio</span>
+          </div>
+          <button id="confirmSendSMS" class="btn btn-success">Send SMS</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Show login screen initially
+      document.addEventListener('DOMContentLoaded', function() {
+        // Check if already logged in
+        const savedHostData = localStorage.getItem('hostData');
+        if (savedHostData) {
+          try {
+            const hostData = JSON.parse(savedHostData);
+            if (hostData.authenticated && hostData.expires > Date.now()) {
+              // Auto-login
+              document.getElementById('loginScreen').style.display = 'none';
+              document.getElementById('userInitials').textContent = hostData.name.charAt(0);
+              document.getElementById('headerUserName').textContent = hostData.name;
+              document.getElementById('sidebarUserName').textContent = hostData.name;
+            }
+          } catch (e) {
+            console.error('Error parsing host data:', e);
+            localStorage.removeItem('hostData');
+          }
+        }
+
+        // Initialize Google address autocomplete
+        const addressInput = document.getElementById('address');
+        const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+          types: ['address'],
+          componentRestrictions: { country: 'us' }
+        });
+
+        // Set appointment date min to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('appointmentDate').min = today;
+
+        // Handle date change to update time slots
+        document.getElementById('appointmentDate').addEventListener('change', updateTimeSlots);
+      });
+
+      // Login functionality
+      document.getElementById('loginBtn').addEventListener('click', () => {
+        const name = document.getElementById('hostName').value.trim();
+        const password = document.getElementById('hostPassword').value;
+        const rememberMe = document.getElementById('rememberMe').checked;
+        
+        if (name !== "MP") {
+          showToast('Username incorrect. Please try again.', 'error');
+          return;
+        }
+        
+        if (password === "APPT101") {
+          // Hide login screen
+          document.getElementById('loginScreen').style.display = 'none';
+          
+          // Set user name in UI
+          document.getElementById('userInitials').textContent = 'M';
+          document.getElementById('headerUserName').textContent = 'MP';
+          document.getElementById('sidebarUserName').textContent = 'MP';
+          
+          if (rememberMe) {
+            // Store authentication with expiry (14 days)
+            const expiry = Date.now() + (14 * 24 * 60 * 60 * 1000);
+            localStorage.setItem('hostData', JSON.stringify({
+              name: "MP",
+              authenticated: true,
+              expires: expiry,
+              hostId: btoa("MP" + '-' + new Date().toISOString().slice(0,10))
+            }));
+          }
+          
+          // Load appointments data
+          loadAppointments();
+        } else {
+          showToast('Incorrect security key', 'error');
+        }
+      });
+
+      // Logout functionality
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        if (confirm('Are you sure you want to logout?')) {
+          localStorage.removeItem('hostData');
+          window.location.reload();
+        }
+      });
+
+      // Tab navigation
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', () => {
+          // Remove active class from all menu items
+          document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+          // Add active class to clicked item
+          item.classList.add('active');
+          
+          // Hide all tab content
+          document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+          // Show selected tab content
+          document.getElementById(item.dataset.tab + 'Tab').classList.add('active');
+        });
+      });
+
+      // Forms functionality
+      document.getElementById('previewBtn').addEventListener('click', () => {
+        const name = document.getElementById('customerName').value;
+        const address = document.getElementById('address').value;
+        const date = document.getElementById('appointmentDate').value;
+        const time = document.getElementById('appointmentTime').value;
+        const projectType = document.getElementById('projectType').value;
+        const notes = document.getElementById('notes').value;
+        
+        // Format date for display
+        const formattedDate = formatDate(date);
+        
+        const previewSection = document.getElementById('previewSection');
+        previewSection.innerHTML = `
+          <h3 style="margin-bottom: 1rem; color: var(--text-dark);">Appointment Preview</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div>
+              <p style="font-weight: 500;">Customer</p>
+              <p>${name}</p>
+            </div>
+            <div>
+              <p style="font-weight: 500;">Date</p>
+              <p>${formattedDate}</p>
+            </div>
+            <div>
+              <p style="font-weight: 500;">Time</p>
+              <p>${time}</p>
+            </div>
+            <div>
+              <p style="font-weight: 500;">Project Type</p>
+              <p>${projectType}</p>
+            </div>
+          </div>
+          <div style="margin-top: 1rem;">
+            <p style="font-weight: 500;">Address</p>
+            <p>${address}</p>
+          </div>
+          ${notes ? `
+          <div style="margin-top: 1rem;">
+            <p style="font-weight: 500;">Notes</p>
+            <p>${notes}</p>
+          </div>` : ''}
+        `;
+        previewSection.style.display = 'block';
+      });
+
+      document.getElementById('generateLinkBtn').addEventListener('click', () => {
+        const name = document.getElementById('customerName').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const date = document.getElementById('appointmentDate').value;
+        const time = document.getElementById('appointmentTime').value;
+        const projectType = document.getElementById('projectType').value;
+        
+        if (!name || !address || !date || !time || !projectType) {
+          showToast('Please fill out all required fields', 'error');
+          return;
+        }
+        
+        // Combine date and time for datetime value
+        const datetime = new Date(`${date}T${convertTo24Hour(time)}`);
+        document.getElementById('datetime').value = datetime.toISOString().slice(0, 16);
+        
+        // Save appointment and generate link
+        const index = saveCurrentAppointment();
+        generateLinkForAppointment(index);
+        
+        // Show the link container
+        document.getElementById('shareLinkContainer').style.display = 'block';
+        
+        showToast('Appointment created! Link copied to clipboard.', 'success');
+        loadAppointments();
+      });
+
+      // Copy to clipboard functionality
+      document.getElementById('copyLinkBtn').addEventListener('click', () => {
+        const shareLink = document.getElementById('shareLink');
+        shareLink.select();
+        document.execCommand('copy');
+        
+        showToast('Link copied to clipboard!', 'success');
+      });
+
+      // Helper function to show toast notifications
+      function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.className = 'toast';
+        toast.classList.add('toast-' + type);
+        
+        const icon = toast.querySelector('.toast-icon i');
+        if (type === 'success') {
+          icon.className = 'fas fa-check-circle';
+        } else if (type === 'error') {
+          icon.className = 'fas fa-exclamation-circle';
+        }
+        
+        toast.querySelector('.toast-message').textContent = message;
+        
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3000);
+      }
+
+      // Format dates nicely
+      function formatDate(datetimeStr) {
+        if (!datetimeStr) return '';
+        const date = new Date(datetimeStr);
+        return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      }
+      
+      function formatTime(datetimeStr) {
+        if (!datetimeStr) return '';
+        const date = new Date(datetimeStr);
+        return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      }
+
+      // Email functionality
+      document.getElementById('sendEmailBtn').addEventListener('click', () => {
+        const email = document.getElementById('email').value;
+        
+        if (!email) {
+          showToast('Please enter a valid email address', 'error');
+          return;
+        }
+        
+        const name = document.getElementById('customerName').value;
+        const date = formatDate(document.getElementById('appointmentDate').value);
+        const time = document.getElementById('appointmentTime').value;
+        const projectType = document.getElementById('projectType').value;
+        const address = document.getElementById('address').value;
+        
+        // Show email preview
+        document.getElementById('emailPreviewTo').textContent = `${name} <${email}>`;
+        document.getElementById('emailPreviewContent').innerHTML = `
+          <div style="font-family: Arial, sans-serif; color: #333;">
+            <p>Dear ${name},</p>
+            <p>Thank you for scheduling an appointment with Long Home. We're looking forward to meeting with you to discuss your ${projectType} project.</p>
+            <p><strong>Appointment Details:</strong></p>
+            <p>Date: ${date}<br>
+            Time: ${time}<br>
+            Location: ${address}<br>
+            Project: ${projectType}</p>
+            <p>During your appointment, our specialist will conduct a thorough inspection, discuss options, and provide a detailed estimate with our 1-year price lock guarantee.</p>
+            <p>If you need to reschedule, please call us at (555) 123-4567 at least 24 hours before your appointment.</p>
+            <p>You can also view your appointment details and add it to your calendar by clicking the link below:</p>
+            <p><a href="${document.getElementById('shareLink').value || '#'}" style="color: #2563eb;">View Appointment Details</a></p>
+            <p>Best regards,<br>
+            The Long Home Team</p>
+          </div>
+        `;
+        
+        document.getElementById('emailPreviewModal').style.display = 'block';
+      });
+
+      // SMS functionality 
+      document.getElementById('sendSMSBtn').addEventListener('click', () => {
+        const phone = document.getElementById('phone').value;
+        
+        if (!phone) {
+          showToast('Please enter a valid phone number', 'error');
+          return;
+        }
+        
+        // Get company phone from settings if available
+        const settings = JSON.parse(localStorage.getItem('hostSettings') || '{}');
+        const companyPhone = settings.companyPhone || '(555) 123-4567';
+        document.getElementById('companyPhoneDisplay').textContent = companyPhone;
+        
+        const name = document.getElementById('customerName').value;
+        const date = formatDate(document.getElementById('appointmentDate').value);
+        const time = document.getElementById('appointmentTime').value;
+        
+        // Get the link or use placeholder
+        const shareLink = document.getElementById('shareLink').value || '[link]';
+        
+        // Create SMS content
+        const messageContent = `Hi ${name}, your appointment with Long Home is confirmed for ${date} at ${time}. Click ${shareLink} to view details. Reply HELP for help or STOP to unsubscribe.`;
+        
+        // Show SMS preview
+        document.getElementById('smsPreviewTo').textContent = phone;
+        document.getElementById('smsPreviewContent').textContent = messageContent;
+        
+        // Update character count and segments
+        const charCount = messageContent.length;
+        document.getElementById('smsCharCount').textContent = charCount;
+        
+        // Calculate SMS segments (1 segment = 160 chars, subsequent segments = 153 chars)
+        const segments = charCount <= 160 ? 1 : Math.ceil((charCount - 160) / 153) + 1;
+        document.getElementById('smsSegments').textContent = `(${segments} segment${segments > 1 ? 's' : ''})`;
+        
+        // Update delivery info based on settings
+        const smsService = settings.smsService || 'twilio';
+        document.getElementById('smsDeliveryInfo').textContent = `SMS will be sent via ${smsService.charAt(0).toUpperCase() + smsService.slice(1)}`;
+        
+        document.getElementById('smsPreviewModal').style.display = 'block';
+      });
+
+      // Send SMS from preview (now with improved visibility of what's happening)
+      document.getElementById('confirmSendSMS').addEventListener('click', () => {
+        const phone = document.getElementById('smsPreviewTo').textContent;
+        const content = document.getElementById('smsPreviewContent').textContent;
+        
+        // Change button state to show sending
+        const sendBtn = document.getElementById('confirmSendSMS');
+        const originalText = sendBtn.innerHTML;
+        sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        sendBtn.disabled = true;
+        
+        // Store the SMS in the sent history
+        setTimeout(() => {
+          // In a real implementation, you'd call your SMS API here
+          const sentSms = JSON.parse(localStorage.getItem('sentSms') || '[]');
+          
+          sentSms.push({
+            recipient: document.getElementById('customerName').value,
+            contact: phone,
+            content: content,
+            date: new Date().toISOString(),
+            status: 'delivered'
+          });
+          
+          localStorage.setItem('sentSms', JSON.stringify(sentSms));
+          
+          // Reset button and close modal
+          sendBtn.innerHTML = originalText;
+          sendBtn.disabled = false;
+          document.getElementById('smsPreviewModal').style.display = 'none';
+          
+          showToast(`SMS sent successfully to ${phone}`, 'success');
+          
+          // Load communications history to show the new message
+          loadCommunicationsHistory();
+        }, 1500);
+      });
+
+      // Close email preview
+      document.getElementById('closeEmailPreview').addEventListener('click', () => {
+        document.getElementById('emailPreviewModal').style.display = 'none';
+      });
+
+      // Send email from preview
+      document.getElementById('confirmSendEmail').addEventListener('click', () => {
+        document.getElementById('emailPreviewModal').style.display = 'none';
+        showToast('Email sent successfully!', 'success');
+      });
+
+      // Close SMS preview
+      document.getElementById('closeSmsPreview').addEventListener('click', () => {
+        document.getElementById('smsPreviewModal').style.display = 'none';
+      });
+
+      // Appointments management
+      function loadAppointments() {
+        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        
+        // Recent appointments (dashboard)
+        const recentList = document.getElementById('recentAppointmentsList');
+        // All appointments (appointments tab)
+        const allList = document.getElementById('allAppointmentsList');
+        
+        if (appointments.length === 0) {
+          const emptyState = `
+            <div class="empty-state">
+              <div class="empty-icon"><i class="far fa-calendar"></i></div>
+              <h3 class="empty-title">No appointments yet</h3>
+              <p>Create your first appointment to get started</p>
+            </div>
+          `;
+          recentList.innerHTML = emptyState;
+          allList.innerHTML = emptyState;
+          return;
+        }
+        
+        // Sort appointments by date (newest first)
+        appointments.sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
+        
+        // Limit recent appointments to 3
+        const recentAppointments = appointments.slice(0, 3);
+        
+        // Render recent appointments
+        recentList.innerHTML = recentAppointments.map((apt, index) => createAppointmentCard(apt, index)).join('');
+        
+        // Render all appointments
+        allList.innerHTML = appointments.map((apt, index) => createAppointmentCard(apt, index)).join('');
+        
+        // Add event listeners to appointment cards
+        document.querySelectorAll('.edit-appointment').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const index = e.currentTarget.dataset.index;
+            loadAppointmentForEditing(index);
+            // Switch to dashboard tab
+            document.querySelector('.menu-item[data-tab="dashboard"]').click();
+          });
+        });
+        
+        document.querySelectorAll('.copy-link').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const index = e.currentTarget.dataset.index;
+            generateLinkForAppointment(index);
+            showToast('Link copied to clipboard!', 'success');
+          });
+        });
+        
+        document.querySelectorAll('.preview-appointment').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const index = e.currentTarget.dataset.index;
+            openPreviewForAppointment(index);
+          });
+        });
+        
+        document.querySelectorAll('.delete-appointment').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const index = e.currentTarget.dataset.index;
+            deleteAppointment(index);
+          });
+        });
+      }
+
+      function createAppointmentCard(apt, index) {
+        const date = new Date(apt.datetime);
+        const isPast = date < new Date();
+        const statusClass = isPast ? 'text-muted' : 'text-primary';
+        const statusText = isPast ? 'Past' : 'Upcoming';
+        
+        return `
+          <div class="appointment-card">
+            <div class="appointment-status">${statusText}</div>
+            <h3 class="appointment-title">${apt.name}</h3>
+            <div class="appointment-details">
+              <div><i class="fas fa-calendar-day"></i> ${formatDate(apt.datetime)}</div>
+              <div><i class="fas fa-clock"></i> ${formatTime(apt.datetime)}</div>
+              <div><i class="fas fa-map-marker-alt"></i> ${apt.address}</div>
+              <div><i class="fas fa-toolbox"></i> ${apt.projectType}</div>
+              ${apt.phone ? `<div><i class="fas fa-phone"></i> ${apt.phone}</div>` : ''}
+              ${apt.email ? `<div><i class="fas fa-envelope"></i> ${apt.email}</div>` : ''}
+            </div>
+            <div class="contact-actions" style="margin-top: 0.75rem; display: flex; gap: 0.5rem;">
+              ${apt.phone ? `<button class="mini-btn sms-btn" onclick="quickMessage('sms', ${index})"><i class="fas fa-sms"></i> SMS</button>` : ''}
+              ${apt.email ? `<button class="mini-btn email-btn" onclick="quickMessage('email', ${index})"><i class="fas fa-envelope"></i> Email</button>` : ''}
+            </div>
+            <div class="appointment-actions">
+              <button class="action-btn edit-appointment" data-index="${index}" title="Edit">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn copy-link" data-index="${index}" title="Copy Link">
+                <i class="fas fa-link"></i>
+              </button>
+              <button class="action-btn preview-appointment" data-index="${index}" title="Preview">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="action-btn delete-appointment" data-index="${index}" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      function quickMessage(type, index) {
+        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        const apt = appointments[index];
+        
+        if (type === 'sms' && apt.phone) {
+          document.getElementById('customerName').value = apt.name;
+          document.getElementById('phone').value = apt.phone;
+          document.getElementById('address').value = apt.address;
+          document.getElementById('appointmentDate').value = apt.datetime.split('T')[0];
+          document.getElementById('appointmentTime').value = apt.displayTime;
+          document.getElementById('projectType').value = apt.projectType;
+          
+          document.getElementById('sendSMSBtn').click();
+        } else if (type === 'email' && apt.email) {
+          document.getElementById('customerName').value = apt.name;
+          document.getElementById('email').value = apt.email;
+          document.getElementById('address').value = apt.address;
+          document.getElementById('appointmentDate').value = apt.datetime.split('T')[0];
+          document.getElementById('appointmentTime').value = apt.displayTime;
+          document.getElementById('projectType').value = apt.projectType;
+          
+          document.getElementById('sendEmailBtn').click();
+        }
+      }
+
+      function loadAppointmentForEditing(index) {
+        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        const apt = appointments[index];
+        
+        document.getElementById('customerName').value = apt.name;
+        document.getElementById('address').value = apt.address;
+        document.getElementById('appointmentDate').value = apt.datetime.split('T')[0];
+        document.getElementById('appointmentTime').value = apt.displayTime;
+        document.getElementById('projectType').value = apt.projectType;
+        document.getElementById('notes').value = apt.notes || '';
+        document.getElementById('email').value = apt.email || '';
+        document.getElementById('phone').value = apt.phone || '';
+        document.getElementById('communicationPref').value = apt.communicationPref || 'none';
+        
+        document.getElementById('previewBtn').click();
+      }
+
+      function saveCurrentAppointment() {
+        const date = document.getElementById('appointmentDate').value;
+        const time = document.getElementById('appointmentTime').value;
+        
+        const datetime = date && time ? new Date(`${date}T${convertTo24Hour(time)}`) : new Date();
+        
+        const apt = {
+          name: document.getElementById('customerName').value,
+          address: document.getElementById('address').value,
+          datetime: datetime.toISOString(),
+          displayTime: time,
+          projectType: document.getElementById('projectType').value,
+          notes: document.getElementById('notes').value,
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          communicationPref: document.getElementById('communicationPref').value,
+          created: new Date().toISOString()
+        };
+        
+        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        appointments.push(apt);
+        localStorage.setItem('appointments', JSON.stringify(appointments));
+        
+        return appointments.length - 1;
+      }
+
+      function generateLinkForAppointment(index) {
+        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        const apt = appointments[index];
+        
+        const name = encodeURIComponent(apt.name);
+        const address = encodeURIComponent(apt.address);
+        const datetime = encodeURIComponent(apt.datetime);
+        const projectType = encodeURIComponent(apt.projectType);
+        const notes = encodeURIComponent(apt.notes || '');
+        
+        const params = new URLSearchParams();
+        params.append('name', name);
+        params.append('address', address);
+        params.append('datetime', datetime);
+        params.append('projectType', projectType);
+        if (notes) params.append('notes', notes);
+        
+        // Create a public-friendly URL
+        const baseUrl = getPublicBaseUrl();
+        const fullLink = `${baseUrl}/appointment-confirmation.html?access=public_${generateUniqueId()}&${params.toString()}`;
+        
+        document.getElementById('shareLink').value = fullLink;
+        document.getElementById('shareLinkContainer').style.display = 'block';
+        
+        const shareLink = document.getElementById('shareLink');
+        shareLink.select();
+        document.execCommand('copy');
+      }
+
+      // Get a public base URL that works on any device
+      function getPublicBaseUrl() {
+        // Check if we're running from a file:/// URL or hosted on a web server
+        if (window.location.protocol === 'file:') {
+          // Local file - suggest a proper URL for sharing
+          return 'https://yourdomain.com';
+        } else {
+          // Get the correct base URL from the current location
+          const pathParts = window.location.pathname.split('/');
+          // Remove the filename from the path
+          pathParts.pop();
+          return window.location.origin + pathParts.join('/');
+        }
+      }
+
+      function openPreviewForAppointment(index) {
+        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        const apt = appointments[index];
+        
+        const name = encodeURIComponent(apt.name);
+        const address = encodeURIComponent(apt.address);
+        const datetime = encodeURIComponent(apt.datetime);
+        const projectType = encodeURIComponent(apt.projectType);
+        const notes = encodeURIComponent(apt.notes || '');
+        
+        // Build a proper URL for the preview
+        const baseUrl = getPublicBaseUrl();
+        const url = `${baseUrl}/appointment-confirmation.html?access=preview&name=${name}&address=${address}&datetime=${datetime}&projectType=${projectType}${notes ? '&notes=' + notes : ''}`;
+                  
+        window.open(url, '_blank');
+      }
+
+      function deleteAppointment(index) {
+        if (!confirm('Are you sure you want to delete this appointment?')) return;
+        
+        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        appointments.splice(index, 1);
+        localStorage.setItem('appointments', JSON.stringify(appointments));
+        
+        loadAppointments();
+        showToast('Appointment deleted successfully', 'success');
+      }
+
+      // Settings
+      document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+        const settings = {
+          companyName: document.getElementById('companyName').value,
+          logoUrl: document.getElementById('logoUrl').value,
+          duration: document.getElementById('duration').value
+        };
+        
+        localStorage.setItem('hostSettings', JSON.stringify(settings));
+        showToast('Settings saved successfully!', 'success');
+      });
+
+      // Data management
+      document.getElementById('clearAllBtn').addEventListener('click', () => {
+        if (confirm('WARNING: This will delete ALL appointment data. Are you absolutely sure?')) {
+          localStorage.removeItem('appointments');
+          loadAppointments();
+          showToast('All appointment data has been cleared', 'success');
+        }
+      });
+      
+      document.getElementById('exportAllBtn').addEventListener('click', () => {
+        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appointments, null, 2));
+        const downloadLink = document.createElement('a');
+        downloadLink.setAttribute("href", dataStr);
+        downloadLink.setAttribute("download", "appointments_export.json");
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
+        
+        showToast('Data exported successfully', 'success');
+      });
+
+      // Create new appointment button
+      document.getElementById('createNewAppointmentBtn').addEventListener('click', () => {
+        document.getElementById('appointmentForm').reset();
+        document.querySelector('.menu-item[data-tab="dashboard"]').click();
+        document.getElementById('customerName').focus();
+      });
+
+      // View all appointments button
+      document.getElementById('viewAllBtn').addEventListener('click', () => {
+        document.querySelector('.menu-item[data-tab="appointments"]').click();
+      });
+
+      function updateTimeSlots() {
+        const dateInput = document.getElementById('appointmentDate');
+        const timeSelect = document.getElementById('appointmentTime');
+        
+        if (!dateInput.value) {
+          timeSelect.innerHTML = '<option value="">Select a date first</option>';
+          return;
+        }
+        
+        const selectedDate = new Date(dateInput.value);
+        const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 6 = Saturday
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+        
+        timeSelect.innerHTML = '<option value="">Select a time</option>';
+        
+        // Clear any previous day type indicators
+        const existingIndicator = timeSelect.parentNode.querySelector('.day-type-indicator');
+        if (existingIndicator) {
+          existingIndicator.remove();
+        }
+        
+        if (isWeekend) {
+          // Weekend time slots
+          addTimeOption(timeSelect, '9:00 AM');
+          addTimeOption(timeSelect, '12:00 PM');
+          addTimeOption(timeSelect, '3:00 PM');
+        } else {
+          // Weekday time slots
+          addTimeOption(timeSelect, '10:00 AM');
+          addTimeOption(timeSelect, '2:00 PM');
+          addTimeOption(timeSelect, '6:00 PM');
+        }
+        
+        const dayTypeIndicator = document.createElement('div');
+        dayTypeIndicator.className = 'day-type-indicator'; // Add class for easy identification
+        dayTypeIndicator.style.fontSize = '0.8rem';
+        dayTypeIndicator.style.marginTop = '0.25rem';
+        dayTypeIndicator.style.color = 'var(--primary)';
+        dayTypeIndicator.textContent = isWeekend ? 'Weekend hours selected' : 'Weekday hours selected';
+        
+        timeSelect.parentNode.appendChild(dayTypeIndicator);
+      }
+
+      function addTimeOption(selectElement, timeText) {
+        const option = document.createElement('option');
+        option.value = timeText;
+        option.textContent = timeText;
+        selectElement.appendChild(option);
+      }
+
+      function convertTo24Hour(time12h) {
+        const [time, modifier] = time12h.split(' ');
+        let [hours, minutes] = time.split(':');
+        
+        if (hours === '12') {
+          hours = '00';
+        }
+        
+        if (modifier === 'PM') {
+          hours = parseInt(hours, 10) + 12;
+        }
+        
+        return `${hours}:${minutes}`;
+      }
+
+      function updateSmsCharCount() {
+        document.getElementById('smsConfirmationCharCount').textContent = 
+          document.getElementById('smsConfirmationTemplate').value.length;
+        
+        document.getElementById('smsReminderCharCount').textContent = 
+          document.getElementById('smsReminderTemplate').value.length;
+        
+        const templateIds = ['smsScriptTemplate', 'bathroomScriptTemplate', 'roofingScriptTemplate', 'schedulingScriptTemplate'];
+        
+        templateIds.forEach(id => {
+          const element = document.getElementById(id);
+          if (element) {
+            const countId = id.replace('Template', 'CharCount');
+            const countElement = document.getElementById(countId);
+            if (countElement) {
+              countElement.textContent = element.value.length;
+            }
+          }
+        });
+      }
+      
+      document.addEventListener('DOMContentLoaded', function() {
+        updateSmsCharCount();
+        
+        document.getElementById('smsConfirmationTemplate').addEventListener('input', updateSmsCharCount);
+        document.getElementById('smsReminderTemplate').addEventListener('input', updateSmsCharCount);
+        
+        document.querySelectorAll('[data-email-view]').forEach(tab => {
+          tab.addEventListener('click', () => {
+            document.querySelectorAll('[data-email-view]').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            document.querySelectorAll('#emailTemplatesView, #emailSentView, #emailBulkView').forEach(view => {
+              view.style.display = 'none';
+            });
+            
+            const viewToShow = tab.dataset.emailView;
+            document.getElementById(`email${viewToShow.charAt(0).toUpperCase() + viewToShow.slice(1)}View`).style.display = 'block';
+          });
+        });
+        
+        document.querySelectorAll('[data-sms-view]').forEach(tab => {
+          tab.addEventListener('click', () => {
+            document.querySelectorAll('[data-sms-view]').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            document.querySelectorAll('#smsTemplatesView, #smsSentView, #smsBulkView').forEach(view => {
+              view.style.display = 'none';
+            });
+            
+            const viewToShow = tab.dataset.smsView;
+            document.getElementById(`sms${viewToShow.charAt(0).toUpperCase() + viewToShow.slice(1)}View`).style.display = 'block';
+          });
+        });
+        
+        document.querySelectorAll('.save-template').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const templateType = btn.dataset.template;
+            const templateContent = document.getElementById(`${templateType}Template`).value;
+            
+            const templates = JSON.parse(localStorage.getItem('communicationTemplates') || '{}');
+            templates[templateType] = templateContent;
+            localStorage.setItem('communicationTemplates', JSON.stringify(templates));
+            
+            showToast('Template saved successfully!', 'success');
+          });
+        });
+        
+        document.querySelectorAll('.preview-template').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const templateType = btn.dataset.template;
+            const templateContent = document.getElementById(`${templateType}Template`).value;
+            
+            const sampleData = {
+              customerName: 'John Smith',
+              appointmentDate: 'Monday, April 15, 2024',
+              appointmentTime: '10:00 AM',
+              address: '123 Main St, Anytown, USA',
+              projectType: 'Roofing Consultation',
+              companyPhone: '(555) 123-4567',
+              confirmationLink: 'https://example.com/appointment/abc123'
+            };
+            
+            let previewContent = templateContent;
+            for (const [key, value] of Object.entries(sampleData)) {
+              previewContent = previewContent.replace(new RegExp(`{{${key}}}`, 'g'), value);
+            }
+            
+            if (templateType.startsWith('sms')) {
+              document.getElementById('smsPreviewContent').textContent = previewContent;
+              document.getElementById('smsPreviewTo').textContent = '(555) 987-6543';
+              document.getElementById('smsPreviewModal').style.display = 'block';
+            } else {
+              document.getElementById('emailPreviewContent').innerHTML = `
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                  ${previewContent.replace(/\n/g, '<br>')}
+                </div>
+              `;
+              document.getElementById('emailPreviewTo').textContent = 'John Smith <john.smith@example.com>';
+              document.getElementById('emailPreviewModal').style.display = 'block';
+            }
+          });
+        });
+        
+        document.querySelectorAll('#allUpcomingCheck, #todayCheck, #tomorrowCheck').forEach(checkbox => {
+          checkbox.addEventListener('change', updateEmailRecipientsList);
+        });
+        
+        document.querySelectorAll('#smsAllUpcomingCheck, #smsTodayCheck, #smsTomorrowCheck').forEach(checkbox => {
+          checkbox.addEventListener('change', updateSmsRecipientsList);
+        });
+        
+        document.getElementById('sendBulkEmailBtn').addEventListener('click', () => {
+          const recipients = document.querySelectorAll('#recipientsList .recipient-item');
+          
+          if (recipients.length === 0) {
+            showToast('No recipients selected', 'error');
+            return;
+          }
+          
+          const templateType = document.getElementById('bulkEmailTemplate').value;
+          const templateContent = document.getElementById(`${templateType}Template`).value;
+          
+          showToast(`Sending ${recipients.length} emails...`, 'success');
+          
+          setTimeout(() => {
+            showToast(`${recipients.length} emails sent successfully!`, 'success');
+            
+            const sentEmails = JSON.parse(localStorage.getItem('sentEmails') || '[]');
+            
+            recipients.forEach(recipient => {
+              const name = recipient.querySelector('.recipient-name').textContent;
+              const email = recipient.querySelector('.recipient-contact').textContent;
+              
+              sentEmails.push({
+                recipient: name,
+                contact: email,
+                template: templateType,
+                content: templateContent,
+                date: new Date().toISOString(),
+                status: 'delivered'
+              });
+            });
+            
+            localStorage.setItem('sentEmails', JSON.stringify(sentEmails));
+          }, 2000);
+        });
+        
+        document.getElementById('sendBulkSmsBtn').addEventListener('click', () => {
+          const recipients = document.querySelectorAll('#smsRecipientsList .recipient-item');
+          
+          if (recipients.length === 0) {
+            showToast('No recipients selected', 'error');
+            return;
+          }
+          
+          const templateType = document.getElementById('bulkSmsTemplate').value;
+          const templateContent = document.getElementById(`${templateType}Template`).value;
+          
+          showToast(`Sending ${recipients.length} SMS messages...`, 'success');
+          
+          setTimeout(() => {
+            showToast(`${recipients.length} SMS messages sent successfully!`, 'success');
+            
+            const sentSms = JSON.parse(localStorage.getItem('sentSms') || '[]');
+            
+            recipients.forEach(recipient => {
+              const name = recipient.querySelector('.recipient-name').textContent;
+              const phone = recipient.querySelector('.recipient-contact').textContent;
+              
+              sentSms.push({
+                recipient: name,
+                contact: phone,
+                template: templateType,
+                content: templateContent,
+                date: new Date().toISOString(),
+                status: 'delivered'
+              });
+            });
+            
+            localStorage.setItem('sentSms', JSON.stringify(sentSms));
+          }, 2000);
+        });
+        
+        const savedTemplates = JSON.parse(localStorage.getItem('communicationTemplates') || '{}');
+        
+        for (const [templateType, content] of Object.entries(savedTemplates)) {
+          const templateElement = document.getElementById(`${templateType}Template`);
+          if (templateElement) {
+            templateElement.value = content;
+          }
+        }
+        
+        loadCommunicationsHistory();
+        
+        document.querySelectorAll('[data-legal-view]').forEach(tab => {
+          tab.addEventListener('click', () => {
+            document.querySelectorAll('[data-legal-view]').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            document.querySelectorAll('#termsView, #privacyView, #disclaimerView').forEach(view => {
+              view.classList.remove('active');
+            });
+            
+            const viewToShow = tab.dataset.legalView;
+            document.getElementById(`${viewToShow}View`).classList.add('active');
+          });
+        });
+        
+        const settings = JSON.parse(localStorage.getItem('hostSettings') || '{}');
+        if (!settings.logoUrl) {
+          document.getElementById('logoUrl').value = 'https://longhome.com/wp-content/uploads/2025/01/LongHomeLogo.png';
+        }
+      });
+      
+      function updateEmailRecipientsList() {
+        const allUpcoming = document.getElementById('allUpcomingCheck').checked;
+        const today = document.getElementById('todayCheck').checked;
+        const tomorrow = document.getElementById('tomorrowCheck').checked;
+        
+        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        const now = new Date();
+        
+        let filteredAppointments = [];
+        
+        if (allUpcoming) {
+          filteredAppointments = appointments.filter(apt => new Date(apt.datetime) > now);
+        } else {
+          if (today) {
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+            
+            const todayAppointments = appointments.filter(apt => {
+              const aptDate = new Date(apt.datetime);
+              return aptDate >= todayStart && aptDate <= todayEnd;
+            });
+            
+            filteredAppointments = [...filteredAppointments, ...todayAppointments];
+          }
+          
+          if (tomorrow) {
+            const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            const tomorrowEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 23, 59, 59);
+            
+            const tomorrowAppointments = appointments.filter(apt => {
+              const aptDate = new Date(apt.datetime);
+              return aptDate >= tomorrowStart && aptDate <= tomorrowEnd;
+            });
+            
+            filteredAppointments = [...filteredAppointments, ...tomorrowAppointments];
+          }
+        }
+        
+        filteredAppointments = filteredAppointments.filter(apt => apt.email);
+        
+        const recipientsList = document.getElementById('recipientsList');
+        
+        if (filteredAppointments.length === 0) {
+          recipientsList.innerHTML = `
+            <div class="empty-state" style="padding: 1rem;">
+              <p>No recipients found matching the selected criteria</p>
+            </div>
+          `;
+          return;
+        }
+        
+        recipientsList.innerHTML = filteredAppointments.map(apt => `
+          <div class="recipient-item">
+            <div class="recipient-info">
+              <div class="recipient-name">${apt.name}</div>
+              <div class="recipient-contact">${apt.email}</div>
+            </div>
+            <div class="recipient-appointment">
+              ${formatDate(apt.datetime)} at ${formatTime(apt.datetime)}
+            </div>
+          </div>
+        `).join('');
+      }
+      
+      function updateSmsRecipientsList() {
+        const allUpcoming = document.getElementById('smsAllUpcomingCheck').checked;
+        const today = document.getElementById('smsTodayCheck').checked;
+        const tomorrow = document.getElementById('smsTomorrowCheck').checked;
+        
+        const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+        const now = new Date();
+        
+        let filteredAppointments = [];
+        
+        if (allUpcoming) {
+          filteredAppointments = appointments.filter(apt => new Date(apt.datetime) > now);
+        } else {
+          if (today) {
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+            
+            const todayAppointments = appointments.filter(apt => {
+              const aptDate = new Date(apt.datetime);
+              return aptDate >= todayStart && aptDate <= todayEnd;
+            });
+            
+            filteredAppointments = [...filteredAppointments, ...todayAppointments];
+          }
+          
+          if (tomorrow) {
+            const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            const tomorrowEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 23, 59, 59);
+            
+            const tomorrowAppointments = appointments.filter(apt => {
+              const aptDate = new Date(apt.datetime);
+              return aptDate >= tomorrowStart && aptDate <= tomorrowEnd;
+            });
+            
+            filteredAppointments = [...filteredAppointments, ...tomorrowAppointments];
+          }
+        }
+        
+        filteredAppointments = filteredAppointments.filter(apt => apt.phone);
+        
+        const recipientsList = document.getElementById('smsRecipientsList');
+        
+        if (filteredAppointments.length === 0) {
+          recipientsList.innerHTML = `
+            <div class="empty-state" style="padding: 1rem;">
+              <p>No recipients found matching the selected criteria</p>
+            </div>
+          `;
+          return;
+        }
+        
+        recipientsList.innerHTML = filteredAppointments.map(apt => `
+          <div class="recipient-item">
+            <div class="recipient-info">
+              <div class="recipient-name">${apt.name}</div>
+              <div class="recipient-contact">${apt.phone}</div>
+            </div>
+            <div class="recipient-appointment">
+              ${formatDate(apt.datetime)} at ${formatTime(apt.datetime)}
+            </div>
+          </div>
+        `).join('');
+      }
+      
+      function loadCommunicationsHistory() {
+        const sentEmails = JSON.parse(localStorage.getItem('sentEmails') || '[]');
+        const sentEmailsList = document.getElementById('sentEmailsList');
+        
+        if (sentEmails.length === 0) {
+          sentEmailsList.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon"><i class="far fa-envelope"></i></div>
+              <h3 class="empty-title">No emails sent yet</h3>
+              <p>Sent emails will appear here for tracking</p>
+            </div>
+          `;
+        } else {
+          sentEmailsList.innerHTML = sentEmails.map(email => `
+            <div class="communication-item">
+              <div class="header">
+                <div class="recipient">${email.recipient} &lt;${email.contact}&gt;</div>
+                <div class="date">${new Date(email.date).toLocaleString()}</div>
+              </div>
+              <div class="content">${email.content.substring(0, 100)}${email.content.length > 100 ? '...' : ''}</div>
+              <div class="status status-${email.status}">${email.status === 'delivered' ? 'Delivered' : 'Failed'}</div>
+            </div>
+          `).join('');
+        }
+        
+        const sentSms = JSON.parse(localStorage.getItem('sentSms') || '[]');
+        const sentSMSList = document.getElementById('sentSMSList');
+        
+        if (sentSms.length === 0) {
+          sentSMSList.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon"><i class="far fa-comment-dots"></i></div>
+              <h3 class="empty-title">No SMS messages sent yet</h3>
+              <p>Sent SMS messages will appear here for tracking</p>
+            </div>
+          `;
+        } else {
+          sentSMSList.innerHTML = sentSms.map(sms => `
+            <div class="communication-item">
+              <div class="header">
+                <div class="recipient">${sms.recipient} (${sms.contact})</div>
+                <div class="date">${new Date(sms.date).toLocaleString()}</div>
+              </div>
+              <div class="content">${sms.content}</div>
+              <div class="status status-${sms.status}">${sms.status === 'delivered' ? 'Delivered' : 'Failed'}</div>
+            </div>
+          `).join('');
+        }
+      }
+      
+      document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+        const settings = {
+          companyName: document.getElementById('companyName').value,
+          logoUrl: document.getElementById('logoUrl').value,
+          duration: document.getElementById('duration').value,
+          companyEmail: document.getElementById('companyEmail').value,
+          companyPhone: document.getElementById('companyPhone').value,
+          emailService: document.getElementById('emailServiceProvider').value,
+          emailjsServiceId: document.getElementById('emailjsServiceId').value,
+          smsService: document.getElementById('smsServiceProvider').value,
+          twilioAccountSid: document.getElementById('twilioAccountSid').value,
+          sendAutomaticReminders: document.getElementById('sendAutomaticReminders').checked
+        };
+        
+        localStorage.setItem('hostSettings', JSON.stringify(settings));
+        showToast('Settings saved successfully!', 'success');
+      });
+
+      document.getElementById('generateTempLinkBtn').addEventListener('click', () => {
+        const name = document.getElementById('tempUserName').value.trim();
+        const duration = parseInt(document.getElementById('tempUserDuration').value);
+        const accessLevel = document.getElementById('tempUserAccess').value;
+        
+        if (!name) {
+          showToast('Please enter a name for the temporary user', 'error');
+          return;
+        }
+        
+        const tempToken = {
+          name: name,
+          created: Date.now(),
+          expires: Date.now() + (duration * 60 * 60 * 1000),
+          accessLevel: accessLevel,
+          id: generateUniqueId()
+        };
+        
+        const tempUsers = JSON.parse(localStorage.getItem('tempUsers') || '[]');
+        tempUsers.push(tempToken);
+        localStorage.setItem('tempUsers', JSON.stringify(tempUsers));
+        
+        // Create a public-friendly URL
+        const baseUrl = getPublicBaseUrl();
+        const tempLink = `${baseUrl}/appointment-builder.html?tempAccess=${tempToken.id}`;
+        
+        document.getElementById('tempShareLink').value = tempLink;
+        document.getElementById('tempLinkContainer').style.display = 'block';
+        
+        document.getElementById('tempShareLink').select();
+        document.execCommand('copy');
+        
+        showToast(`Temporary access link created for ${name}. Link copied to clipboard!`, 'success');
+        
+        displayActiveTempUsers();
+        
+        // Show public URL notice if using local file
+        if (window.location.protocol === 'file:') {
+          showPublicUrlNotice();
+        }
+      });
+      
+      // Function to show a notice about using public URLs
+      function showPublicUrlNotice() {
+        const notice = document.createElement('div');
+        notice.style.backgroundColor = 'rgba(245, 158, 11, 0.1)';
+        notice.style.border = '1px solid var(--accent)';
+        notice.style.borderRadius = '8px';
+        notice.style.padding = '15px';
+        notice.style.marginTop = '15px';
+        notice.style.color = 'var(--text-dark)';
+        notice.innerHTML = `
+          <div style="display: flex; align-items: flex-start;">
+            <i class="fas fa-info-circle" style="color: var(--accent); margin-right: 10px; font-size: 1.2rem;"></i>
+            <div>
+              <p style="margin-bottom: 8px;"><strong>Important:</strong> You're currently using a local file URL.</p>
+              <p style="margin-bottom: 8px;">To make this link accessible to others, you need to:</p>
+              <ol style="margin-left: 20px; margin-bottom: 8px;">
+                <li>Upload these files to a web server, or</li>
+                <li>Use a web hosting service</li>
+              </ol>
+              <p>Then replace "https://yourdomain.com" in the link with your actual domain.</p>
+            </div>
+          </div>
+        `;
+        
+        // Insert after the share link container
+        const container = document.getElementById('tempLinkContainer');
+        container.parentNode.insertBefore(notice, container.nextSibling);
+      }
+      
+      function generateUniqueId() {
+        return 'temp_' + Math.random().toString(36).substr(2, 9);
+      }
+      
+      function displayActiveTempUsers() {
+        const tempUsers = JSON.parse(localStorage.getItem('tempUsers') || '[]');
+        const activeUsers = tempUsers.filter(user => user.expires > Date.now());
+        
+        const tempUsersList = document.getElementById('tempUsersList');
+        const activeTempUsersSection = document.getElementById('activeTempUsers');
+        
+        if (activeUsers.length === 0) {
+          activeTempUsersSection.style.display = 'none';
+          return;
+        }
+        
+        activeTempUsersSection.style.display = 'block';
+        tempUsersList.innerHTML = activeUsers.map(user => {
+          const expiresIn = getTimeRemaining(user.expires);
+          
+          return `
+            <div class="temp-user-item">
+              <div class="temp-user-info">
+                <div class="temp-user-name">${user.name}</div>
+                <div class="temp-user-expires">Expires in ${expiresIn}</div>
+              </div>
+              <button class="btn btn-sm btn-secondary revoke-temp-btn" data-id="${user.id}">
+                <i class="fas fa-times"></i> Revoke
+              </button>
+            </div>
+          `;
+        }).join('');
+        
+        document.querySelectorAll('.revoke-temp-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            revokeTempAccess(id);
+          });
+        });
+      }
+      
+      function getTimeRemaining(expiryTime) {
+        const diff = expiryTime - Date.now();
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        
+        return `${hours}h ${minutes}m`;
+      }
+      
+      function revokeTempAccess(id) {
+        const tempUsers = JSON.parse(localStorage.getItem('tempUsers') || '[]');
+        const updatedUsers = tempUsers.filter(user => user.id !== id);
+        localStorage.setItem('tempUsers', JSON.stringify(updatedUsers));
+        
+        displayActiveTempUsers();
+        showToast('Temporary access revoked successfully', 'success');
+      }
+      
+      document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tempAccessId = urlParams.get('tempAccess');
+        
+        if (tempAccessId) {
+          const tempUsers = JSON.parse(localStorage.getItem('tempUsers') || '[]');
+          const tempUser = tempUsers.find(user => user.id === tempAccessId && user.expires > Date.now());
+          
+          if (tempUser) {
+            const badge = document.createElement('div');
+            badge.classList.add('temp-user-badge');
+            badge.innerHTML = `<i class="fas fa-user-clock"></i> Temporary Access: ${tempUser.name}`;
+            document.body.appendChild(badge);
+            
+            document.getElementById('loginScreen').style.display = 'none';
+            
+            document.getElementById('userInitials').textContent = tempUser.name.charAt(0);
+            document.getElementById('headerUserName').textContent = tempUser.name;
+            document.getElementById('sidebarUserName').textContent = tempUser.name;
+            
+            if (tempUser.accessLevel === 'readonly') {
+              disableEditingFunctionality();
+            } else {
+              overrideDataSavingFunctions();
+            }
+            
+            loadAppointments();
+            
+            const expiryWarning = document.createElement('div');
+            expiryWarning.style.position = 'fixed';
+            expiryWarning.style.bottom = '10px';
+            expiryWarning.style.left = '10px';
+            expiryWarning.style.backgroundColor = 'rgba(239, 68, 68, 0.9)';
+            expiryWarning.style.color = 'white';
+            expiryWarning.style.padding = '10px 15px';
+            expiryWarning.style.borderRadius = '8px';
+            expiryWarning.style.zIndex = '1000';
+            expiryWarning.innerHTML = `<i class="fas fa-clock"></i> Temporary session - changes will not be saved`;
+            document.body.appendChild(expiryWarning);
+          }
+        }
+        
+        displayActiveTempUsers();
+      });
+      
+      function disableEditingFunctionality() {
+        document.querySelectorAll('.btn-primary, .btn-success, .btn-accent').forEach(btn => {
+          if (btn.id !== 'loginBtn') {
+            btn.disabled = true;
+            btn.title = "Temporary users cannot make changes";
+            btn.style.opacity = '0.6';
+            btn.style.cursor = 'not-allowed';
+          }
+        });
+        
+        document.querySelectorAll('form').forEach(form => {
+          const warning = document.createElement('div');
+          warning.style.padding = '0.75rem';
+          warning.style.marginBottom = '1rem';
+          warning.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+          warning.style.borderRadius = '8px';
+          warning.style.color = 'var(--warning)';
+          warning.innerHTML = '<i class="fas fa-exclamation-triangle"></i> You are in read-only mode. Changes cannot be saved.';
+          form.prepend(warning);
+        });
+      }
+      
+      function overrideDataSavingFunctions() {
+        const originalSetItem = localStorage.setItem;
+        
+        localStorage.setItem = function(key, value) {
+          if (key === 'tempUsers' || key === 'viewedItems' || key.startsWith('temp_')) {
+            originalSetItem.apply(this, arguments);
+          } else {
+            console.log('Temporary user attempted to save data:', key);
+          }
+        };
+      }
+    </script>
+  </body>
+</html>

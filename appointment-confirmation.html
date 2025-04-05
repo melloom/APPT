@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appointment Confirmation - Long Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #004990;
+      --primary-light: #2d6cdf;
+      --primary-dark: #003570;
+      --accent: #ffa500;
+      --text-dark: #333333;
+      --text-light: #666666;
+      --background: #f8f9fa;
+      --card: #ffffff;
+      --warning: #d9534f;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 680px;
+      margin: auto;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .logo {
+      display: block;
+      margin: 0 auto 20px;
+      max-width: 180px;
+      height: auto;
+    }
+    
+    .tagline {
+      font-size: 20px;
+      color: var(--primary-light);
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 30px;
+      letter-spacing: -0.3px;
+    }
+    
+    h1 {
+      font-size: 28px;
+      margin-bottom: 24px;
+      color: var(--primary);
+      text-align: center;
+      line-height: 1.3;
+    }
+    
+    .section {
+      margin-bottom: 32px;
+      padding: 24px;
+      background-color: rgba(45, 108, 223, 0.05);
+      border-radius: 12px;
+      border-left: 4px solid var(--primary-light);
+    }
+    
+    .appointment-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: space-between;
+    }
+    
+    .detail-item {
+      flex: 1 1 48%;
+      min-width: 200px;
+    }
+    
+    .detail-item i {
+      color: var(--primary);
+      margin-right: 8px;
+    }
+    
+    h2 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+    }
+    
+    h2 i {
+      margin-right: 10px;
+    }
+    
+    p, li {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+    
+    strong {
+      color: var(--text-dark);
+    }
+    
+    ul {
+      padding-left: 28px;
+      margin-top: 12px;
+    }
+    
+    li {
+      margin-bottom: 10px;
+      position: relative;
+    }
+    
+    li::marker {
+      color: var(--primary);
+    }
+    
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 32px;
+    }
+    
+    button {
+      background-color: var(--primary);
+      color: white;
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 500;
+      box-shadow: 0 4px 6px rgba(0, 73, 144, 0.2);
+    }
+    
+    button:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 73, 144, 0.25);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    .calendar-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .google-calendar {
+      background-color: #4285F4;
+    }
+    
+    .google-calendar:hover {
+      background-color: #3367D6;
+    }
+    
+    .apple-calendar {
+      background-color: #555;
+    }
+    
+    .apple-calendar:hover {
+      background-color: #333;
+    }
+    
+    .countdown-container {
+      text-align: center;
+      margin: 24px 0;
+      padding: 16px;
+      background-color: rgba(217, 83, 79, 0.1);
+      border-radius: 8px;
+    }
+    
+    .countdown {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--warning);
+      margin-top: 8px;
+    }
+    
+    .disclaimer {
+      font-size: 14px;
+      color: var(--warning);
+      text-align: center;
+      margin-top: 20px;
+      padding: 12px;
+      background-color: rgba(217, 83, 79, 0.08);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .disclaimer i {
+      margin-right: 8px;
+      font-size: 16px;
+    }
+    
+    .footer {
+      font-size: 14px;
+      color: var(--text-light);
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+    
+    .popup-content {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 460px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      animation: popup-appear 0.3s ease-out;
+    }
+    
+    @keyframes popup-appear {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .popup-content h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      color: var(--primary);
+      font-size: 24px;
+    }
+    
+    .reminder-option {
+      margin-top: 24px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .reminder-option label {
+      margin-left: 8px;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+    
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      cursor: pointer;
+    }
+    
+    input[type="tel"] {
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      width: 100%;
+      font-size: 16px;
+    }
+    
+    @media (max-width: 768px) {
+      .card {
+        padding: 30px 20px;
+        margin: 10px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      .section {
+        padding: 20px 16px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      button {
+        width: 100%;
+      }
+    }
+    
+    /* Footer styles */
+    .footer-links {
+      margin: 10px 0;
+    }
+    
+    .footer-links a {
+      color: var(--primary);
+      text-decoration: none;
+      margin: 0 5px;
+    }
+    
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+    
+    .footer-credit {
+      font-size: 12px;
+      margin-top: 10px;
+      color: var(--text-light);
+    }
+    
+    /* Legal popup styles */
+    .legal-popup {
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .close-popup {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-light);
+    }
+    
+    .legal-text {
+      text-align: left;
+      margin-top: 20px;
+      line-height: 1.6;
+    }
+    
+    .legal-text h4 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: var(--text-dark);
+    }
+    
+    .contact-info {
+      text-align: left;
+      margin-top: 20px;
+    }
+    
+    .contact-info p {
+      margin-bottom: 10px;
+    }
+    
+    .contact-info h4 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: var(--text-dark);
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    // Set expiration time to 30 minutes from page load
+    const expirationTime = new Date().getTime() + 30 * 60 * 1000;
+    
+    function downloadPDF() {
+      const element = document.querySelector('.card');
+      const phoneNumber = document.getElementById('phone').value;
+      
+      // Save phone number if reminder is checked
+      if (document.getElementById('reminder').checked && phoneNumber) {
+        // In a real app, you would send this to your backend
+        console.log(`Reminder set for: ${phoneNumber}`);
+        document.getElementById('reminderConfirmation').style.display = 'block';
+      }
+      
+      // Remove the countdown and buttons for the PDF
+      const countdownContainer = document.querySelector('.countdown-container');
+      const actionButtons = document.querySelector('.action-buttons');
+      const disclaimer = document.querySelector('.disclaimer');
+      const reminderOption = document.querySelector('.reminder-option');
+      
+      countdownContainer.style.display = 'none';
+      actionButtons.style.display = 'none';
+      disclaimer.style.display = 'none';
+      if (reminderOption) reminderOption.style.display = 'none';
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = urlParams.get('name') || '';
+      
+      const options = {
+        margin: [0.5, 0.5, 0.5, 0.5],
+        filename: `Appointment_Confirmation_${name.replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      
+      html2pdf().set(options).from(element).save().then(() => {
+        // Restore the elements after PDF is generated
+        countdownContainer.style.display = 'block';
+        actionButtons.style.display = 'flex';
+        disclaimer.style.display = 'flex';
+        if (reminderOption) reminderOption.style.display = 'flex';
+      });
+    }
+
+    function addToGoogleCalendar() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = urlParams.get('name') || '';
+      const address = urlParams.get('address') || '';
+      const datetimeStr = urlParams.get('datetime') || '';
+      const projectType = urlParams.get('projectType') || '';
+      
+      // Parse date for calendar
+      const appointmentDate = new Date(datetimeStr);
+      const endDate = new Date(appointmentDate.getTime() + 90 * 60000); // 90 minutes later
+      
+      // Format dates for Google Calendar
+      const startDate = appointmentDate.toISOString().replace(/-|:|\.\d+/g, '');
+      const endDateTime = endDate.toISOString().replace(/-|:|\.\d+/g, '');
+      
+      const title = `${projectType} – Long Home`;
+      const description = `${projectType} appointment with Long Home. Includes full inspection, material options, and 1-year price lock.`;
+      
+      const link = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startDate}/${endDateTime}&details=${encodeURIComponent(description)}&location=${encodeURIComponent(address)}`;
+      window.open(link, '_blank');
+    }
+
+    function downloadICS() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = urlParams.get('name') || '';
+      const address = urlParams.get('address') || '';
+      const datetimeStr = urlParams.get('datetime') || '';
+      const projectType = urlParams.get('projectType') || '';
+      
+      // Parse date for calendar
+      const appointmentDate = new Date(datetimeStr);
+      const endDate = new Date(appointmentDate.getTime() + 90 * 60000); // 90 minutes later
+      
+      // Format for .ics file
+      const startDate = appointmentDate.toISOString().replace(/-|:|\.\d+/g, '');
+      const endDateTime = endDate.toISOString().replace(/-|:|\.\d+/g, '');
+      
+      const icsContent = 
+        'BEGIN:VCALENDAR\n' +
+        'VERSION:2.0\n' +
+        'CALSCALE:GREGORIAN\n' +
+        'BEGIN:VEVENT\n' +
+        `SUMMARY:${projectType} - Long Home\n` +
+        `DTSTART:${startDate}\n` +
+        `DTEND:${endDateTime}\n` +
+        `LOCATION:${address}\n` +
+        `DESCRIPTION:Your ${projectType} appointment with Long Home\n` +
+        'STATUS:CONFIRMED\n' +
+        'SEQUENCE:0\n' +
+        'END:VEVENT\n' +
+        'END:VCALENDAR';
+      
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `LongHome_${projectType.replace(/\s+/g, '_')}_Appointment.ics`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Check if the viewer is in host mode
+    function isHostViewing() {
+      try {
+        const hostData = JSON.parse(localStorage.getItem('hostData') || '{}');
+        return hostData.authenticated && hostData.expires > Date.now();
+      } catch (e) {
+        return false;
+      }
+    }
+    
+    // New function to check if the URL has a valid public access token
+    function hasValidPublicAccess() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const accessToken = urlParams.get('access');
+      
+      // If there's any access token present, consider it valid
+      // In a production environment, you would validate this token against your database
+      return !!accessToken;
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if host is viewing OR if there's a valid public access token
+      if (isHostViewing()) {
+        showHostView();
+      } else if (hasValidPublicAccess()) {
+        // If there's a valid public access token, show the client view
+        showClientView();
+      } else {
+        // Check if we came from the appointment builder with a temp access token
+        const urlParams = new URLSearchParams(window.location.search);
+        const tempAccess = urlParams.get('tempAccess');
+        
+        if (tempAccess && tempAccess.startsWith('temp_')) {
+          // Convert this to a public access link by replacing the temp token
+          const publicAccessToken = generatePublicToken();
+          const currentUrl = new URL(window.location.href);
+          
+          // Remove temp access parameter and add public access token
+          currentUrl.searchParams.delete('tempAccess');
+          currentUrl.searchParams.set('access', publicAccessToken);
+          
+          // Display the sharable link and show client view
+          showShareLinkInterface(currentUrl.href);
+          showClientView();
+        } else {
+          // No valid access - show error
+          document.querySelector('.card').innerHTML = `
+            <div style="text-align:center; color:var(--warning);">
+              <i class="fas fa-exclamation-circle" style="font-size:48px;"></i>
+              <h2>Access Denied</h2>
+              <p>This appointment link requires a valid access token.</p>
+              <p>Please contact the person who shared this link with you for assistance.</p>
+            </div>
+          `;
+        }
+      }
+    });
+    
+    // Generate a public access token
+    function generatePublicToken() {
+      return 'public_' + Math.random().toString(36).substring(2, 15);
+    }
+    
+    // Display interface for sharing the public link
+    function showShareLinkInterface(publicUrl) {
+      // Create a host control bar at the top
+      const shareBar = document.createElement('div');
+      shareBar.style.backgroundColor = '#28a745';
+      shareBar.style.color = 'white';
+      shareBar.style.padding = '15px';
+      shareBar.style.textAlign = 'center';
+      shareBar.style.borderRadius = '5px';
+      shareBar.style.margin = '0 0 20px 0';
+      
+      shareBar.innerHTML = `
+        <strong>Public Link Created!</strong> - Share this link with your client:
+        <div style="margin:10px 0;">
+          <input type="text" value="${publicUrl}" style="width:80%; padding:8px; border-radius:4px; border:1px solid #ccc;" readonly>
+          <button onclick="copyToClipboard('${publicUrl}')" style="margin-left:5px; padding:8px; border-radius:4px; background:#004990; color:white; border:none;">
+            <i class="fas fa-copy"></i> Copy
+          </button>
+        </div>
+        <p style="font-size:13px; margin-top:5px;">This link can be accessed by anyone without logging in</p>
+      `;
+      
+      document.body.insertBefore(shareBar, document.body.firstChild);
+    }
+    
+    // Function to copy text to clipboard
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Link copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
+    
+    function showHostView() {
+      // Create a host control bar at the top
+      const hostBar = document.createElement('div');
+      hostBar.style.backgroundColor = '#004990';
+      hostBar.style.color = 'white';
+      hostBar.style.padding = '10px';
+      hostBar.style.textAlign = 'center';
+      hostBar.style.borderRadius = '5px';
+      hostBar.style.margin = '0 0 20px 0';
+      
+      const hostName = JSON.parse(localStorage.getItem('hostData')).name;
+      hostBar.innerHTML = `
+        <strong>Host View: ${hostName}</strong> - You're viewing this as the appointment host
+        <button onclick="window.location.href='appointment-builder.html'" style="margin-left:15px;">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </button>
+      `;
+      
+      document.body.insertBefore(hostBar, document.body.firstChild);
+      
+      // Regular content is still shown below the host bar
+      showClientView();
+    }
+    
+    function showClientView() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = urlParams.get('name') || '';
+      const address = urlParams.get('address') || '';
+      const datetimeStr = urlParams.get('datetime') || '';
+      const projectType = urlParams.get('projectType') || '';
+      const notes = urlParams.get('notes') || '';
+      
+      // Validate required parameters
+      if (!name || !address || !datetimeStr || !projectType) {
+        document.querySelector('.card').innerHTML = `
+          <div style="text-align:center; color:var(--warning);">
+            <i class="fas fa-exclamation-circle" style="font-size:48px;"></i>
+            <h2>Invalid Appointment Information</h2>
+            <p>This appointment link appears to be invalid or incomplete.</p>
+            <p>Please contact us for assistance.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Format the date and time
+      const datetime = new Date(datetimeStr);
+      const formattedDate = datetime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      const formattedTime = datetime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      
+      // Update page content with appointment details
+      document.querySelector('h1').textContent = `Your ${projectType} is Confirmed!`;
+      document.querySelectorAll('.customer-name').forEach(el => el.textContent = name);
+      document.querySelector('.appointment-date').textContent = formattedDate;
+      document.querySelector('.appointment-time').textContent = formattedTime;
+      document.querySelector('.appointment-address').textContent = address;
+      document.querySelector('.project-type').textContent = projectType;
+      
+      // Show notes if available
+      if (notes) {
+        // Find the "What to Expect" section and add a notes paragraph
+        const whatToExpectSection = document.querySelector('.section:nth-of-type(2)');
+        const notesP = document.createElement('p');
+        notesP.innerHTML = `<strong>Additional Notes:</strong> ${notes}`;
+        whatToExpectSection.appendChild(notesP);
+      }
+      
+      // Start the countdown timer
+      startCountdown();
+    }
+    
+    // Countdown timer
+    function startCountdown() {
+      const countdownDisplay = document.getElementById('countdown');
+      let timeLeft = 30 * 60; // 30 minutes in seconds
+      
+      const countdownTimer = setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        
+        countdownDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        
+        if (timeLeft <= 0) {
+          clearInterval(countdownTimer);
+          alert('This confirmation page has expired.');
+          // Optionally redirect or disable functionality
+        }
+        
+        timeLeft--;
+      }, 1000);
+    }
+    
+    // Toggle phone input when reminder checkbox is clicked
+    document.getElementById('reminder').addEventListener('change', function() {
+      document.getElementById('phone').style.display = this.checked ? 'block' : 'none';
+    });
+    
+    // Legal popup functions
+    function showLegalPopup(type) {
+      document.getElementById('legalPopup').style.display = 'flex';
+      
+      // Hide all content sections first
+      document.getElementById('termsContent').style.display = 'none';
+      document.getElementById('privacyContent').style.display = 'none';
+      document.getElementById('contactContent').style.display = 'none';
+      
+      // Show the requested section
+      document.getElementById(`${type}Content`).style.display = 'block';
+      
+      // Prevent background scrolling
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeLegalPopup() {
+      document.getElementById('legalPopup').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Close popup when clicking outside the content
+    window.addEventListener('click', function(event) {
+      const popup = document.getElementById('legalPopup');
+      if (event.target === popup) {
+        closeLegalPopup();
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="card">
+    <img src="https://longhome.com/wp-content/uploads/2025/01/LongHomeLogo.png" alt="Long Home Logo" class="logo">
+    <div class="tagline">Quality home improvements you can trust</div>
+    
+    <h1>Your Appointment is Confirmed!</h1>
+    
+    <div class="countdown-container">
+      <p>This confirmation page will expire in:</p>
+      <div class="countdown" id="countdown">30:00</div>
+    </div>
+    
+    <div class="section">
+      <h2><i class="fas fa-calendar-check"></i> Appointment Details</h2>
+      <div class="appointment-details">
+        <div class="detail-item">
+          <p><i class="fas fa-user"></i> <strong>Client:</strong> <span class="customer-name"></span></p>
+        </div>
+        <div class="detail-item">
+          <p><i class="fas fa-calendar-day"></i> <strong>Date:</strong> <span class="appointment-date"></span></p>
+        </div>
+        <div class="detail-item">
+          <p><i class="fas fa-clock"></i> <strong>Time:</strong> <span class="appointment-time"></span></p>
+        </div>
+        <div class="detail-item">
+          <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> <span class="appointment-address"></span></p>
+        </div>
+        <div class="detail-item">
+          <p><i class="fas fa-tools"></i> <strong>Project:</strong> <span class="project-type"></span></p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2><i class="fas fa-info-circle"></i> What to Expect</h2>
+      <p>During your appointment, our specialist will:</p>
+      <ul>
+        <li>Conduct a thorough inspection of your property</li>
+        <li>Discuss material options and recommendations</li>
+        <li>Provide a detailed estimate with our 1-year price lock guarantee</li>
+        <li>Answer any questions you may have about the project</li>
+      </ul>
+    </div>
+    
+    <div class="action-buttons">
+      <button onclick="downloadPDF()"><i class="fas fa-file-pdf"></i> Download PDF</button>
+    </div>
+    
+    <div class="calendar-buttons">
+      <button class="google-calendar" onclick="addToGoogleCalendar()"><i class="fab fa-google"></i> Add to Google Calendar</button>
+      <button class="apple-calendar" onclick="downloadICS()"><i class="fas fa-calendar-alt"></i> Download Calendar (.ics)</button>
+    </div>
+    
+    <div class="disclaimer">
+      <i class="fas fa-exclamation-circle"></i>
+      <p>Please note that appointments are subject to our standard 24-hour cancellation policy.</p>
+    </div>
+    
+    <div class="reminder-option">
+      <input type="checkbox" id="reminder" />
+      <label for="reminder">Send me a reminder 24 hours before my appointment</label>
+      <input type="tel" id="phone" placeholder="Enter your phone number" style="display: none;" />
+    </div>
+    
+    <div id="reminderConfirmation" style="display: none; text-align: center; margin-top: 10px; color: var(--primary);">
+      <i class="fas fa-check-circle"></i> Reminder has been set!
+    </div>
+    
+    <div class="footer">
+      <p>© 2023 Long Home. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#" onclick="showLegalPopup('terms')">Terms of Service</a> |
+        <a href="#" onclick="showLegalPopup('privacy')">Privacy Policy</a> |
+        <a href="#" onclick="showLegalPopup('contact')">Contact Us</a>
+      </div>
+      <p class="footer-credit">Developed by Melvin Peralta | Long Home</p>
+    </div>
+  </div>
+  
+  <div id="legalPopup" class="popup" style="display: none;">
+    <div class="popup-content legal-popup">
+      <span class="close-popup" onclick="closeLegalPopup()">&times;</span>
+      <div id="termsContent" style="display: none;">
+        <h3>Terms of Service</h3>
+        <p>Last updated: May 2023</p>
+        <div class="legal-text">
+          <p>By accessing and using this appointment confirmation page, you agree to be bound by these Terms of Service. These terms apply to all visitors, users, and others who access or use our service.</p>
+          
+          <h4>1. Appointment Confirmation</h4>
+          <p>This page serves as confirmation of your scheduled appointment with Long Home. The details provided are based on the information you shared with our representative.</p>
+          
+          <h4>2. Privacy</h4>
+          <p>Your privacy is important to us. Please review our Privacy Policy to understand how we collect, use, and protect your information.</p>
+          
+          <h4>3. Cancellation Policy</h4>
+          <p>If you need to cancel or reschedule your appointment, please contact us at least 24 hours in advance at (555) 123-4567.</p>
+          
+          <h4>4. Limitation of Liability</h4>
+          <p>Long Home provides this confirmation service "as is" without warranty of any kind. We shall not be liable for any damages arising from your use of this service or from any appointment-related activities.</p>
+        </div>
+      </div>
+      
+      <div id="privacyContent" style="display: none;">
+        <h3>Privacy Policy</h3>
+        <p>Last updated: May 2023</p>
+        <div class="legal-text">
+          <p>This Privacy Policy describes how Long Home collects, uses, and shares information in connection with your appointment scheduling.</p>
+          
+          <h4>Information We Collect</h4>
+          <p>When you schedule an appointment, we collect personal information such as your name, address, phone number, email address, and details about your project interest.</p>
+          
+          <h4>How We Use Your Information</h4>
+          <p>We use the information we collect to:</p>
+          <ul>
+            <li>Schedule and confirm your appointment</li>
+            <li>Communicate with you about your appointment</li>
+            <li>Provide you with information about our services</li>
+            <li>Improve our customer service and business operations</li>
+          </ul>
+          
+          <h4>Information Security</h4>
+          <p>We implement reasonable security measures to protect your personal information. However, no method of transmission over the Internet is 100% secure.</p>
+          
+          <h4>Contact Us</h4>
+          <p>If you have any questions about this Privacy Policy, please contact us at privacy@longhome.com.</p>
+        </div>
+      </div>
+      
+      <div id="contactContent" style="display: none;">
+        <h3>Contact Long Home</h3>
+        <div class="contact-info">
+          <p><strong>Phone:</strong> (555) 123-4567</p>
+          <p><strong>Email:</strong> appointments@longhome.com</p>
+          <p><strong>Address:</strong> 123 Construction Way, Building City, ST 12345</p>
+          <p><strong>Hours:</strong> Monday-Friday: 8am-6pm, Saturday: 9am-2pm, Sunday: Closed</p>
+          
+          <h4>Need to reschedule?</h4>
+          <p>Please call us at least 24 hours before your appointment time.</p>
+          
+          <h4>Customer Support</h4>
+          <p>For any questions or issues with your appointment, please contact our customer support team at support@longhome.com.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
